@@ -1,0 +1,197 @@
+# ============================================================
+# RailwayOS — .gitignore
+# ============================================================
+# PURPOSE: Prevent secrets, caches, build artifacts, and
+# OS/editor junk from being committed to GitHub.
+# 
+# RULE: When in doubt, add it here BEFORE the first commit.
+# It is much harder to remove a committed secret than to add
+# a gitignore rule.
+# ============================================================
+
+
+# ─────────────────────────────────────────
+# SECRETS & ENVIRONMENT VARIABLES
+# ─────────────────────────────────────────
+# CRITICAL: These files contain real passwords, API keys,
+# and database credentials. NEVER commit them.
+.env
+.env.local
+.env.development
+.env.production
+.env.staging
+*.env
+
+# ─────────────────────────────────────────
+# PYTHON BACKEND
+# ─────────────────────────────────────────
+
+# Virtual environments — Python dependencies installed locally
+venv/
+env/
+.venv/
+.env/
+ENV/
+
+# Python compiled files — auto-generated, not source code
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+*.pyd
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+*.egg
+.eggs/
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Test coverage reports
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.tox/
+nosetests.xml
+coverage.xml
+*.cover
+
+# mypy type checker cache
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Jupyter Notebook checkpoints (used in ML phases)
+.ipynb_checkpoints/
+
+# ─────────────────────────────────────────
+# MACHINE LEARNING
+# ─────────────────────────────────────────
+
+# Trained model files — large binary files, don't belong in Git
+# Use Git LFS or cloud storage for these
+ml/models/*.pkl
+ml/models/*.h5
+ml/models/*.joblib
+ml/models/*.pt
+ml/models/*.onnx
+
+# ML experiment tracking
+mlruns/
+wandb/
+
+# Large datasets — use cloud storage or document data sources
+ml/data/raw/
+ml/data/processed/
+
+# ─────────────────────────────────────────
+# REACT / NODE FRONTEND
+# ─────────────────────────────────────────
+
+# Node modules — installed by npm/yarn, never committed
+# (200MB+ and fully reproducible via package.json)
+node_modules/
+frontend/node_modules/
+
+# Build output — generated files, not source
+frontend/dist/
+frontend/build/
+frontend/.vite/
+
+# npm / yarn logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ─────────────────────────────────────────
+# DATABASE
+# ─────────────────────────────────────────
+
+# Local database files — never in Git
+*.db
+*.sqlite
+*.sqlite3
+
+# PostgreSQL dump files (can contain sensitive data)
+*.dump
+*.sql.gz
+
+# ─────────────────────────────────────────
+# DOCKER
+# ─────────────────────────────────────────
+
+# Docker override files with local config
+docker-compose.override.yml
+
+# ─────────────────────────────────────────
+# OPERATING SYSTEM FILES
+# ─────────────────────────────────────────
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+
+# ─────────────────────────────────────────
+# EDITOR & IDE FILES
+# ─────────────────────────────────────────
+
+# VS Code — workspace-specific settings OK to commit,
+# but personal settings and extensions are not
+.vscode/settings.json
+.vscode/launch.json
+.vscode/extensions.json
+.vscode/*.code-snippets
+.history/
+
+# PyCharm / JetBrains
+.idea/
+*.iml
+*.iws
+
+# Vim
+*.swp
+*.swo
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+
+# Emacs
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+
+# ─────────────────────────────────────────
+# LOGS
+# ─────────────────────────────────────────
+logs/
+*.log
+*.log.*
+
+# ─────────────────────────────────────────
+# TEMPORARY FILES
+# ─────────────────────────────────────────
+tmp/
+temp/
+*.tmp
+*.temp
+*.bak
+*.backup
+*.orig
