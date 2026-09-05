@@ -1,0 +1,38 @@
+# ============================================================
+# RailwayOS — docker-compose.override.yml.example
+# ============================================================
+# PURPOSE: Shows how to create a personal override file for
+# local-only Docker customizations without modifying the
+# shared docker-compose.yml.
+#
+# HOW TO USE:
+#   cp docker-compose.override.yml.example docker-compose.override.yml
+#   Edit docker-compose.override.yml as needed.
+#   docker-compose.override.yml is git-ignored.
+#
+# Added: Day 002 — Environment Setup
+# ============================================================
+
+# Example: expose pgAdmin on port 5050 locally
+# services:
+#   pgadmin:
+#     image: dpage/pgadmin4
+#     ports:
+#       - "5050:80"
+#     environment:
+#       PGADMIN_DEFAULT_EMAIL: admin@railwayos.local
+#       PGADMIN_DEFAULT_PASSWORD: admin
+#     depends_on:
+#       - postgres
+
+# Example: change postgres port on your machine if 5432 is taken
+# services:
+#   postgres:
+#     ports:
+#       - "5433:5432"   # Map host 5433 → container 5432
+
+# Example: mount a local init script
+# services:
+#   postgres:
+#     volumes:
+#       - ./database/init:/docker-entrypoint-initdb.d
