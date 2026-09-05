@@ -2,6 +2,8 @@
 
 A full-stack railway operations platform built as a portfolio project.
 
+**Current milestone:** Day 4 — create the backend Python virtual environment and dependency manifest. Day 3 infrastructure is running and verified.
+
 ## Progress
 
 | Day | Task | Status |
@@ -35,6 +37,7 @@ docker compose ps
 - [Daily Plan (Months 1-4)](docs/first-four-months-daily.md)
 - [GitHub Issues & Milestones](docs/day-001-github-issues.md)
 - [Environment Variables Guide](docs/environment-guide.md)
+- [Day 3 Infrastructure Verification](docs/day-003-infrastructure.md)
 - [Architecture](docs/architecture.md)
 
 ## Tech Stack
