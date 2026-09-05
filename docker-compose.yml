@@ -2,23 +2,25 @@
 # RailwayOS — docker-compose.yml
 # ============================================================
 # PURPOSE: Defines and orchestrates all local development
-# services in one command: docker-compose up
+# services in one command: docker compose up
 #
 # SERVICES:
 #   - postgres   : Primary database
 #   - redis      : Cache and pub/sub
-#   - backend    : FastAPI application (added Phase 5)
-#   - frontend   : React application (added Phase 7)
+#   - backend    : FastAPI application (added Day 5)
+#   - frontend   : React application (added Day 36)
 #
-# CURRENT STATE: Phase 1 — Database and Redis services only.
-# Backend and frontend containers will be added in their
-# respective phases.
+# CURRENT STATE: Day 002 — Database and Redis services only.
+# Variables are read from .env (copy from .env.example).
+# Backend and frontend containers will be added in later days.
+# See docs/environment-guide.md for variable reference.
 #
 # USAGE:
-#   docker-compose up -d            Start all services
-#   docker-compose down             Stop all services
-#   docker-compose logs -f backend  Follow backend logs
-#   docker-compose ps               Show service status
+#   docker compose up -d            Start all services
+#   docker compose down             Stop all services
+#   docker compose logs -f postgres Follow postgres logs
+#   docker compose ps               Show service status
+#   docker compose config           Validate + print resolved config
 # ============================================================
 
 services:
