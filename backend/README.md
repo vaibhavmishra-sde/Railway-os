@@ -2,18 +2,50 @@
 
 FastAPI backend for the RailwayOS platform.
 
-## Setup (Day 2 — after Day 4 adds venv)
+## Setup
+
+Run the setup helper from the repository root:
+
+```powershell
+.\scripts\setup-backend.ps1
+```
+
+On macOS, Linux, or Git Bash:
 
 ```bash
-# From repo root
-cp .env.example .env   # Day 2
-# Day 4: python -m venv .venv && pip install -r requirements.txt
-# Day 5: uvicorn app.main:app --reload
+bash scripts/setup-backend.sh
 ```
 
-## Directory Structure (evolves over Month 1)
+The scripts create `backend/.venv`, upgrade `pip`, install the pinned runtime dependencies from `requirements.txt`, and install development tooling from `requirements-dev.txt`.
 
+To install only runtime dependencies:
+
+```powershell
+.\scripts\setup-backend.ps1 -SkipDev
 ```
+
+```bash
+SKIP_DEV=1 bash scripts/setup-backend.sh
+```
+
+## Manual Setup
+
+```bash
+cd backend
+python -m venv .venv
+
+# Windows PowerShell
+.\.venv\Scripts\python -m pip install --upgrade pip
+.\.venv\Scripts\python -m pip install -r requirements-dev.txt
+
+# macOS/Linux
+.venv/bin/python -m pip install --upgrade pip
+.venv/bin/python -m pip install -r requirements-dev.txt
+```
+
+## Directory Structure
+
+```text
 backend/
 ├── app/                  # FastAPI application (Day 5)
 │   ├── __init__.py
@@ -21,21 +53,23 @@ backend/
 │   ├── config.py         # pydantic-settings (Day 8)
 │   ├── api/              # Route handlers by version
 │   │   └── v1/
-│   ├── core/             # Shared utilities (logging, errors)
+│   ├── core/             # Shared utilities
 │   ├── db/               # SQLAlchemy engine + session (Day 11)
-│   ├── models/           # ORM models (Week 3)
+│   ├── models/           # ORM models
 │   └── schemas/          # Pydantic request/response schemas
 ├── alembic/              # Database migrations (Day 12)
 ├── tests/                # pytest test suite (Day 6)
 ├── pyproject.toml        # Project metadata + tool config
-├── requirements.txt      # Pinned dependencies (Day 4)
+├── requirements.txt      # Pinned runtime dependencies
+├── requirements-dev.txt  # Pinned development dependencies
 └── Dockerfile            # Container image (Day 106)
 ```
 
-## Current State: Day 002
+## Current State: Day 004
 
-- [x] `.env` template present and documented
-- [ ] Python venv (Day 4)
-- [ ] FastAPI app (Day 5)
+- [x] Backend dependency manifest is pinned
+- [x] Development dependency manifest is pinned
+- [x] `backend/.venv` can be created locally and is ignored by Git
+- [ ] FastAPI app scaffold (Day 5)
 - [ ] Tests (Day 6)
 - [ ] CI (Day 7)
