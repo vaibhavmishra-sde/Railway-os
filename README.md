@@ -2,7 +2,7 @@
 
 A full-stack railway operations platform built as a portfolio project.
 
-**Current milestone:** Day 4 complete - backend Python environment and dependency manifests are ready. Next up: Day 5 FastAPI application scaffold.
+**Current milestone:** Day 5 complete - the FastAPI application exposes a health endpoint. Next up: Day 6 test and quality automation.
 
 ## Progress
 
@@ -12,7 +12,19 @@ A full-stack railway operations platform built as a portfolio project.
 | 2 | Copy `.env.example` to `.env`; set dev passwords; validate Docker config | Done |
 | 3 | Start PostgreSQL + Redis via Docker; check health, ports, volumes | Done |
 | 4 | Create backend Python virtual environment and dependency manifest | Done |
-| 5 | Scaffold FastAPI app and local dev server | Next |
+| 5 | Scaffold FastAPI app and local dev server | Done |
+
+## Backend API
+
+Start the application from the `backend` directory:
+
+```powershell
+.\.venv\Scripts\python -m uvicorn app.main:app --reload
+```
+
+The liveness endpoint is available at `http://127.0.0.1:8000/health` and returns
+the service name, version, and an `ok` status. Versioned clients may use
+`/api/v1/health`.
 
 ## Quick Start
 

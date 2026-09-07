@@ -65,11 +65,22 @@ backend/
 └── Dockerfile            # Container image (Day 106)
 ```
 
-## Current State: Day 004
+## Run the API
+
+From `backend/`, run:
+
+```powershell
+.\.venv\Scripts\python -m uvicorn app.main:app --reload
+```
+
+Check `http://127.0.0.1:8000/health` for a 200 response. The same endpoint is
+also exposed at `/api/v1/health` for versioned clients.
+
+## Current State: Day 005
 
 - [x] Backend dependency manifest is pinned
 - [x] Development dependency manifest is pinned
 - [x] `backend/.venv` can be created locally and is ignored by Git
-- [ ] FastAPI app scaffold (Day 5)
+- [x] FastAPI app scaffold and `GET /health` endpoint (Day 5)
 - [ ] Tests (Day 6)
 - [ ] CI (Day 7)
