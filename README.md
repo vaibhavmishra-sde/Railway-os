@@ -2,7 +2,7 @@
 
 A full-stack railway operations platform built as a portfolio project.
 
-**Current milestone:** Day 5 complete - the FastAPI application exposes a health endpoint. Next up: Day 6 test and quality automation.
+**Current milestone:** Day 6 complete - backend tests and quality automation are in place. Next up: Day 7 continuous integration.
 
 ## Progress
 
@@ -13,6 +13,7 @@ A full-stack railway operations platform built as a portfolio project.
 | 3 | Start PostgreSQL + Redis via Docker; check health, ports, volumes | Done |
 | 4 | Create backend Python virtual environment and dependency manifest | Done |
 | 5 | Scaffold FastAPI app and local dev server | Done |
+| 6 | Add backend tests, formatter, linter, and pre-commit checks | Done |
 
 ## Backend API
 
@@ -60,6 +61,18 @@ bash scripts/setup-backend.sh
 ```
 
 These commands create `backend/.venv` and install the pinned backend dependencies.
+
+## Backend Quality Checks
+
+Run formatting verification, linting, and the pytest suite from the repository root:
+
+```powershell
+.\scripts\check-backend.ps1
+```
+
+```bash
+bash scripts/check-backend.sh
+```
 
 ## Documentation
 
