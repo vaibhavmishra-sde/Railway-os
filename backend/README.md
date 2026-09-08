@@ -76,11 +76,32 @@ From `backend/`, run:
 Check `http://127.0.0.1:8000/health` for a 200 response. The same endpoint is
 also exposed at `/api/v1/health` for versioned clients.
 
-## Current State: Day 005
+## Quality Checks
+
+From the repository root, run the complete backend check suite:
+
+```powershell
+.\scripts\check-backend.ps1
+```
+
+```bash
+bash scripts/check-backend.sh
+```
+
+The checks run Ruff formatting verification, Ruff linting, and pytest. Install
+the Git hook once after setup to run whitespace, syntax, formatting, and lint
+checks before each commit:
+
+```powershell
+.\backend\.venv\Scripts\pre-commit install
+```
+
+## Current State: Day 006
 
 - [x] Backend dependency manifest is pinned
 - [x] Development dependency manifest is pinned
 - [x] `backend/.venv` can be created locally and is ignored by Git
 - [x] FastAPI app scaffold and `GET /health` endpoint (Day 5)
-- [ ] Tests (Day 6)
+- [x] Health endpoint and API contract tests (Day 6)
+- [x] Ruff formatting/linting and pre-commit checks (Day 6)
 - [ ] CI (Day 7)
