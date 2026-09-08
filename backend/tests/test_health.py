@@ -2,11 +2,9 @@
 
 from fastapi.testclient import TestClient
 
-from app.main import create_app
 
-
-def test_health_endpoint_returns_service_metadata() -> None:
-    response = TestClient(create_app()).get("/health")
+def test_health_endpoint_returns_service_metadata(client: TestClient) -> None:
+    response = client.get("/health")
 
     assert response.status_code == 200
     assert response.json() == {
