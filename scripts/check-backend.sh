@@ -5,6 +5,7 @@ repo_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 backend_dir="$repo_root/backend"
 python_bin="$backend_dir/.venv/bin/python"
 
+
 if [[ ! -x "$python_bin" ]]; then
     echo "Backend virtual environment not found. Run bash scripts/setup-backend.sh first." >&2
     exit 1
