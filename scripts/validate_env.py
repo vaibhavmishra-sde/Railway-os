@@ -7,6 +7,7 @@ Run with: python scripts/validate_env.py
 Added: Day 002 — Environment Setup
 """
 
+
 import os
 import subprocess
 import sys
@@ -16,6 +17,7 @@ from pathlib import Path
 ROOT = Path(__file__).parent.parent
 ENV_FILE = ROOT / ".env"
 COMPOSE_FILE = ROOT / "docker-compose.yml"
+
 
 REQUIRED_VARS = [
     "POSTGRES_PASSWORD",
@@ -38,15 +40,18 @@ def check(label: str, ok: bool, fix: str = "") -> bool:
     return ok
 
 
+
 def main() -> int:
     print(SEPARATOR)
     print(" RailwayOS — Environment Validator (Day 002)")
     print(SEPARATOR)
     print()
 
+    
     errors: list[str] = []
 
     # ── Step 1: .env exists ─────────────────────────────────
+   
     print("▶ Checking .env file...")
     if not check(
         ".env file exists",
@@ -57,6 +62,7 @@ def main() -> int:
     print()
 
     # ── Step 2: Parse .env ──────────────────────────────────
+   
     env_vars: dict[str, str] = {}
     if ENV_FILE.exists():
         for line in ENV_FILE.read_text(encoding="utf-8").splitlines():
@@ -66,6 +72,7 @@ def main() -> int:
                 env_vars[key.strip()] = value.strip()
 
     # ── Step 3: Required vars ───────────────────────────────
+   
     print("▶ Checking required environment variables...")
     for var in REQUIRED_VARS:
         if not check(
@@ -77,6 +84,7 @@ def main() -> int:
     print()
 
     # ── Step 4: docker compose config ──────────────────────
+   
     print("▶ Running 'docker compose config'...")
     try:
         result = subprocess.run(
@@ -100,6 +108,7 @@ def main() -> int:
     print()
 
     # ── Result ──────────────────────────────────────────────
+    
     print(SEPARATOR)
     if errors:
         print(f" ✗ {len(errors)} check(s) failed:")
