@@ -2,7 +2,7 @@
 
 A full-stack railway operations platform built as a portfolio project.
 
-**Current milestone:** Day 6 complete - backend tests and quality automation are in place. Next up: Day 7 continuous integration.
+**Current milestone:** Day 7 complete - backend checks and local setup instructions are in place. Next up: Day 8 application settings.
 
 ## Progress
 
@@ -14,6 +14,7 @@ A full-stack railway operations platform built as a portfolio project.
 | 4 | Create backend Python virtual environment and dependency manifest | Done |
 | 5 | Scaffold FastAPI app and local dev server | Done |
 | 6 | Add backend tests, formatter, linter, and pre-commit checks | Done |
+| 7 | Add GitHub Actions workflow for backend checks and write local setup instructions | Done |
 
 ## Backend API
 
