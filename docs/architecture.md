@@ -1,7 +1,7 @@
 # RailwayOS Architecture Overview
 
 > **Document Status**: Living document — updated as each phase is completed  
-> **Last Updated**: Phase 1
+> **Last Updated**: Week 2 — Backend Architecture (Days 8-14)
 
 ---
 
@@ -197,3 +197,17 @@ ai ←─────────────── bookings (waitlist), operati
 ---
 
 *This document is updated at the end of each phase.*
+
+---
+
+## Architecture Decision Records — Week 2 (Days 8-14)
+
+| # | Decision | Context | Outcome |
+|---|---|---|---|
+| W2-1 | `pydantic-settings` for config | Need 12-factor env var loading without hard-coded secrets | `Settings` class reads `.env` and validates all required vars at startup |
+| W2-2 | Single `API_PREFIX = /api/v1` | Future-proof versioning with minimal boilerplate | All routes registered under `/api/v1`; health endpoint available at both root and versioned path |
+| W2-3 | Structured JSON logging | Ops need machine-parseable logs in production | `logging` module configured with ISO timestamp + severity; request-id propagated in error responses |
+| W2-4 | Global `GlobalAPIException` handler | Inconsistent error shapes confuse API consumers | All unhandled application errors return `{error, request_id}` JSON with correct HTTP status |
+| W2-5 | SQLAlchemy 2 with `pool_pre_ping` | Stale connections fail silently after idle periods | Engine pings before handing a connection to the app; session closed in `finally` block |
+| W2-6 | Alembic for migrations | Manual SQL scripts are error-prone and hard to roll back | `alembic upgrade head` / `alembic downgrade -1` supported; script template committed |
+| W2-7 | SQLite in-memory for unit tests | Spinning up PostgreSQL in every CI run is slow | `conftest.py` defaults to SQLite; `TEST_DATABASE_URL` overrides for integration tests |
