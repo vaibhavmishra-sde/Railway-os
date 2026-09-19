@@ -1,7 +1,7 @@
 # RailwayOS Architecture Overview
 
 > **Document Status**: Living document — updated as each phase is completed  
-> **Last Updated**: Week 2 — Backend Architecture (Days 8-14)
+> **Last Updated**: Week 3 — Core Railway Schema (Days 15-21)
 
 ---
 
@@ -211,3 +211,61 @@ ai ←─────────────── bookings (waitlist), operati
 | W2-5 | SQLAlchemy 2 with `pool_pre_ping` | Stale connections fail silently after idle periods | Engine pings before handing a connection to the app; session closed in `finally` block |
 | W2-6 | Alembic for migrations | Manual SQL scripts are error-prone and hard to roll back | `alembic upgrade head` / `alembic downgrade -1` supported; script template committed |
 | W2-7 | SQLite in-memory for unit tests | Spinning up PostgreSQL in every CI run is slow | `conftest.py` defaults to SQLite; `TEST_DATABASE_URL` overrides for integration tests |
+
+---
+
+## Data Model Layer — Week 3 (Days 15-21)
+
+> **Last Updated**: Day 15 — ERD designed, model stubs committed
+
+### ORM Module Layout
+
+```
+backend/app/models/
+├── __init__.py     # Re-exports all models; imported by Alembic env.py
+├── station.py      # Station
+├── train.py        # Train, Coach, SeatClass
+├── seat.py         # Seat, BerthType
+├── route.py        # Route, RouteStop
+└── service.py      # TrainService, ServiceStop, ServiceStatus
+```
+
+### Core Domain Model
+
+The eight core entities fall into three conceptual groups:
+
+**Physical assets**
+- `Station` – a physical stop with a unique code (e.g. `NDLS`)
+- `Train` – a trainset with a unique number (e.g. `12301`)
+- `Coach` – a carriage on a train; carries `SeatClass`
+- `Seat` – individual berth in a coach; carries `BerthType`
+
+**Network topology**
+- `Route` – ordered sequence of stations
+- `RouteStop` – junction entity; holds sequence position and cumulative distance
+
+**Scheduled operations**
+- `TrainService` – a dated instance of a train on a route
+- `ServiceStop` – scheduled arrival/departure at each call on a service
+
+### Design Rationale
+
+| Decision | Rationale |
+|----------|-----------|
+| Route separate from TrainService | One route can be served by many trains on many dates |
+| RouteStop stores cumulative distance | Fare calculation avoids summing partial segments |
+| ServiceStop times stored as `time` (no date) | Full datetime = `service_date` + `time`; avoids timezone ambiguity |
+| SeatClass on Coach, not Seat | All seats in a coach share a class; simplifies availability queries |
+| Python enums → PG VARCHAR/Enum | Validated in application layer; DB stores human-readable strings |
+| UUID primary keys (string, length 36) | SQLite-compatible; no sequence dependency; safe for distributed seeds |
+
+## Architecture Decision Records — Week 3 (Days 15-21)
+
+| # | Decision | Context | Outcome |
+|---|---|---|---|
+| W3-1 | Models in `app/models/` package | Keeps ORM layer separate from API/core layers | All model files imported via `app.models.__init__` for Alembic auto-detect |
+| W3-2 | UUID PKs stored as `String(36)` | SQLite does not have a native UUID type | Works in both SQLite tests and PostgreSQL production |
+| W3-3 | `SeatClass` enum on Coach, not Seat | All berths in a coach share the same fare class | Availability queries need only aggregate by coach, not individual seat |
+| W3-4 | `BerthType` on Seat | Berth position determines upper/lower preference for passengers | Enables seat-preference matching in Week 10 seat assignment |
+| W3-5 | Nullable arrival/departure on ServiceStop | Origin has no arrival; terminus has no departure | Application layer enforces: exactly one of arrival/departure may be NULL |
+
