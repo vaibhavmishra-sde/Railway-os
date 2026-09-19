@@ -8,6 +8,10 @@ from alembic import context
 # Import Base so Alembic can auto-detect models
 from app.db.session import Base, engine  # noqa: F401
 
+# Import all models so their tables are registered with Base.metadata.
+# Without this import, autogenerate would not detect any model tables.
+import app.models  # noqa: F401
+
 config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
