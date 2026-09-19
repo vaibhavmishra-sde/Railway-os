@@ -4,24 +4,6 @@ A full-stack railway operations platform built as a portfolio project.
 
 **Current milestone:** Day 14 complete — Week 2 backend architecture is in place. Next up: Day 15 core railway schema (ERD design).
 
-## Progress
-
-| Day | Task | Status |
-|-----|------|--------|
-| 1 | Read roadmap; create GitHub issues/milestones; verify prerequisites | Done |
-| 2 | Copy `.env.example` to `.env`; set dev passwords; validate Docker config | Done |
-| 3 | Start PostgreSQL + Redis via Docker; check health, ports, volumes | Done |
-| 4 | Create backend Python virtual environment and dependency manifest | Done |
-| 5 | Scaffold FastAPI app and local dev server | Done |
-| 6 | Add backend tests, formatter, linter, and pre-commit checks | Done |
-| 7 | Add GitHub Actions workflow for backend checks and write local setup instructions | Done |
-| 8 | Create application settings with `pydantic-settings` and environment validation | Done |
-| 9 | Add API prefix/versioning, router structure, and OpenAPI metadata | Done |
-| 10 | Add request IDs, structured logging, and a global error response format | Done |
-| 11 | Configure SQLAlchemy engine/session and database connectivity check | Done |
-| 12 | Initialize Alembic and create a blank migration workflow | Done |
-| 13 | Add database test fixture strategy and separate test database configuration | Done |
-| 14 | Review Week 2: refactor imports, document architecture decisions, and run full checks | Done |
 
 ## Backend API
 
