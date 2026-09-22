@@ -46,3 +46,18 @@ class StationResponse(BaseModel):
     is_active: bool
     created_at: datetime
     updated_at: datetime
+
+
+class TrainCreate(BaseModel):
+    """Validated input for a trainset."""
+
+    number: str = Field(min_length=5, max_length=10, examples=["12301"])
+    name: str = Field(min_length=2, max_length=200)
+
+    @field_validator("number")
+    @classmethod
+    def normalize_number(cls, value: str) -> str:
+        normalized = value.strip()
+        if not normalized.isdigit():
+            raise ValueError("Train number must contain digits only")
+        return normalized
