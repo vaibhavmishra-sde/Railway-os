@@ -61,3 +61,16 @@ class TrainCreate(BaseModel):
         if not normalized.isdigit():
             raise ValueError("Train number must contain digits only")
         return normalized
+
+
+class CoachCreate(BaseModel):
+    """Validated input for a coach attached to a train."""
+
+    coach_number: str = Field(min_length=1, max_length=10, examples=["A1"])
+    seat_class: str
+    total_seats: int = Field(ge=1, le=200)
+
+    @field_validator("coach_number")
+    @classmethod
+    def normalize_coach_number(cls, value: str) -> str:
+        return value.strip().upper()
