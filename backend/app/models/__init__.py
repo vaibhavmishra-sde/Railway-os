@@ -7,11 +7,11 @@ Import all model modules here so that:
 All models extend ``app.db.session.Base`` (SQLAlchemy ``DeclarativeBase``).
 """
 
+from app.models.route import Route, RouteStop  # noqa: F401
+from app.models.seat import BerthType, Seat  # noqa: F401
+from app.models.service import ServiceStatus, ServiceStop, TrainService  # noqa: F401
 from app.models.station import Station  # noqa: F401
 from app.models.train import Coach, Train  # noqa: F401
-from app.models.seat import BerthType, Seat  # noqa: F401
-from app.models.route import Route, RouteStop  # noqa: F401
-from app.models.service import ServiceStatus, ServiceStop, TrainService  # noqa: F401
 
 __all__ = [
     "Station",

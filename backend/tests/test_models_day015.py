@@ -6,12 +6,11 @@ in-memory SQLite engine from conftest to exercise:
 2. SQLAlchemy metadata creation (DDL).
 """
 
-import pytest
-
 
 # ---------------------------------------------------------------------------
 # Import smoke tests
 # ---------------------------------------------------------------------------
+
 
 def test_station_model_importable():
     """Station can be imported and has expected attributes."""
@@ -65,6 +64,7 @@ def test_service_models_importable():
 # ---------------------------------------------------------------------------
 # DDL creation tests (uses in-memory SQLite from conftest)
 # ---------------------------------------------------------------------------
+
 
 def test_all_model_tables_created(test_engine):
     """All Day 15 model tables are present in the in-memory database."""

@@ -6,7 +6,7 @@ throughout the booking and search APIs.
 """
 
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from sqlalchemy import Boolean, DateTime, String
 from sqlalchemy.orm import Mapped, mapped_column
@@ -15,7 +15,7 @@ from app.db.session import Base
 
 
 def _now() -> datetime:
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 class Station(Base):
@@ -28,11 +28,15 @@ class Station(Base):
         primary_key=True,
         default=lambda: str(uuid.uuid4()),
     )
-    code: Mapped[str] = mapped_column(String(10), unique=True, nullable=False, index=True)
+    code: Mapped[str] = mapped_column(
+        String(10), unique=True, nullable=False, index=True
+    )
     name: Mapped[str] = mapped_column(String(200), nullable=False)
     city: Mapped[str] = mapped_column(String(100), nullable=False)
     state: Mapped[str] = mapped_column(String(100), nullable=False)
-    timezone: Mapped[str] = mapped_column(String(50), nullable=False, default="Asia/Kolkata")
+    timezone: Mapped[str] = mapped_column(
+        String(50), nullable=False, default="Asia/Kolkata"
+    )
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=_now

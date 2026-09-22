@@ -13,7 +13,9 @@ def get_by_code(session: Session, code: str) -> Station | None:
 
 def list_active(session: Session) -> list[Station]:
     """Return active stations ordered for predictable public responses."""
-    return list(session.scalars(select(Station).where(Station.is_active).order_by(Station.code)))
+    return list(
+        session.scalars(select(Station).where(Station.is_active).order_by(Station.code))
+    )
 
 
 def create(session: Session, **station_data: str) -> Station:

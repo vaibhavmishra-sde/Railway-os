@@ -15,7 +15,8 @@ station and ``scheduled_departure`` is NULL for the terminus.
 
 import enum
 import uuid
-from datetime import date, datetime, time, timezone
+from datetime import UTC, date, datetime, time
+from typing import TYPE_CHECKING
 
 from sqlalchemy import (
     Date,
@@ -31,9 +32,14 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.session import Base
 
+if TYPE_CHECKING:
+    from app.models.route import Route
+    from app.models.station import Station
+    from app.models.train import Train
+
 
 def _now() -> datetime:
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 class ServiceStatus(str, enum.Enum):
@@ -57,10 +63,16 @@ class TrainService(Base):
         String(36), primary_key=True, default=lambda: str(uuid.uuid4())
     )
     train_id: Mapped[str] = mapped_column(
-        String(36), ForeignKey("trains.id", ondelete="RESTRICT"), nullable=False, index=True
+        String(36),
+        ForeignKey("trains.id", ondelete="RESTRICT"),
+        nullable=False,
+        index=True,
     )
     route_id: Mapped[str] = mapped_column(
-        String(36), ForeignKey("routes.id", ondelete="RESTRICT"), nullable=False, index=True
+        String(36),
+        ForeignKey("routes.id", ondelete="RESTRICT"),
+        nullable=False,
+        index=True,
     )
     service_date: Mapped[date] = mapped_column(Date, nullable=False, index=True)
     status: Mapped[ServiceStatus] = mapped_column(
@@ -91,7 +103,9 @@ class ServiceStop(Base):
 
     __tablename__ = "service_stops"
     __table_args__ = (
-        UniqueConstraint("service_id", "stop_sequence", name="uq_service_stop_sequence"),
+        UniqueConstraint(
+            "service_id", "stop_sequence", name="uq_service_stop_sequence"
+        ),
     )
 
     id: Mapped[str] = mapped_column(
@@ -104,7 +118,10 @@ class ServiceStop(Base):
         index=True,
     )
     station_id: Mapped[str] = mapped_column(
-        String(36), ForeignKey("stations.id", ondelete="RESTRICT"), nullable=False, index=True
+        String(36),
+        ForeignKey("stations.id", ondelete="RESTRICT"),
+        nullable=False,
+        index=True,
     )
     stop_sequence: Mapped[int] = mapped_column(Integer, nullable=False)
     scheduled_arrival: Mapped[time | None] = mapped_column(Time, nullable=True)
@@ -112,7 +129,9 @@ class ServiceStop(Base):
     platform_number: Mapped[str | None] = mapped_column(String(10), nullable=True)
 
     # relationships
-    service: Mapped["TrainService"] = relationship("TrainService", back_populates="service_stops")
+    service: Mapped["TrainService"] = relationship(
+        "TrainService", back_populates="service_stops"
+    )
     station: Mapped["Station"] = relationship("Station")  # type: ignore[name-defined]
 
     def __repr__(self) -> str:

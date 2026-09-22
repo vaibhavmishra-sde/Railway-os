@@ -12,17 +12,20 @@ router = APIRouter(prefix="/stations", tags=["stations"])
 
 
 @router.get("", response_model=list[StationResponse])
-def list_stations(db: Session = Depends(get_db)) -> list[StationResponse]:
+def list_stations(db: Session = Depends(get_db)) -> list[StationResponse]:  # noqa: B008
     """List active stations in station-code order."""
     return list_active(db)
 
 
 @router.post("", response_model=StationResponse, status_code=status.HTTP_201_CREATED)
 def create_station_endpoint(
-    payload: StationCreate, db: Session = Depends(get_db)
+    payload: StationCreate,
+    db: Session = Depends(get_db),  # noqa: B008
 ) -> StationResponse:
     """Create a synthetic-network station."""
     try:
         return create_station(db, payload)
     except StationCodeAlreadyExistsError as exc:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT, detail=str(exc)
+        ) from exc

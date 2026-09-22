@@ -18,7 +18,8 @@ Unique constraints
 """
 
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import (
     Boolean,
@@ -33,9 +34,12 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.session import Base
 
+if TYPE_CHECKING:
+    from app.models.station import Station
+
 
 def _now() -> datetime:
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 class Route(Base):
@@ -46,7 +50,9 @@ class Route(Base):
     id: Mapped[str] = mapped_column(
         String(36), primary_key=True, default=lambda: str(uuid.uuid4())
     )
-    code: Mapped[str] = mapped_column(String(20), unique=True, nullable=False, index=True)
+    code: Mapped[str] = mapped_column(
+        String(20), unique=True, nullable=False, index=True
+    )
     name: Mapped[str] = mapped_column(String(200), nullable=False)
     total_distance_km: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
@@ -79,13 +85,21 @@ class RouteStop(Base):
         String(36), primary_key=True, default=lambda: str(uuid.uuid4())
     )
     route_id: Mapped[str] = mapped_column(
-        String(36), ForeignKey("routes.id", ondelete="CASCADE"), nullable=False, index=True
+        String(36),
+        ForeignKey("routes.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
     )
     station_id: Mapped[str] = mapped_column(
-        String(36), ForeignKey("stations.id", ondelete="RESTRICT"), nullable=False, index=True
+        String(36),
+        ForeignKey("stations.id", ondelete="RESTRICT"),
+        nullable=False,
+        index=True,
     )
     stop_sequence: Mapped[int] = mapped_column(Integer, nullable=False)
-    distance_from_origin_km: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    distance_from_origin_km: Mapped[float] = mapped_column(
+        Float, nullable=False, default=0.0
+    )
 
     # relationships
     route: Mapped["Route"] = relationship("Route", back_populates="stops")

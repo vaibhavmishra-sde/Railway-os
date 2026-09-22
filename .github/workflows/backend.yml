@@ -40,3 +40,7 @@ jobs:
 
       - name: Run Pytest
         run: pytest
+        env:
+          POSTGRES_USER: railwayos_ci
+          POSTGRES_PASSWORD: railwayos_ci_password
+          POSTGRES_DB: railwayos_test

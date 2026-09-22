@@ -14,16 +14,24 @@ seat class (``SeatClass`` enum).  The composite unique constraint on
 
 import enum
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
-from sqlalchemy import Boolean, DateTime, Enum, ForeignKey, Integer, String, UniqueConstraint
+from sqlalchemy import (
+    Boolean,
+    DateTime,
+    Enum,
+    ForeignKey,
+    Integer,
+    String,
+    UniqueConstraint,
+)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.session import Base
 
 
 def _now() -> datetime:
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 class SeatClass(str, enum.Enum):
@@ -44,7 +52,9 @@ class Train(Base):
     id: Mapped[str] = mapped_column(
         String(36), primary_key=True, default=lambda: str(uuid.uuid4())
     )
-    number: Mapped[str] = mapped_column(String(10), unique=True, nullable=False, index=True)
+    number: Mapped[str] = mapped_column(
+        String(10), unique=True, nullable=False, index=True
+    )
     name: Mapped[str] = mapped_column(String(200), nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     created_at: Mapped[datetime] = mapped_column(
@@ -65,13 +75,18 @@ class Coach(Base):
     """A single carriage belonging to a train with an assigned seat class."""
 
     __tablename__ = "coaches"
-    __table_args__ = (UniqueConstraint("train_id", "coach_number", name="uq_coach_train_number"),)
+    __table_args__ = (
+        UniqueConstraint("train_id", "coach_number", name="uq_coach_train_number"),
+    )
 
     id: Mapped[str] = mapped_column(
         String(36), primary_key=True, default=lambda: str(uuid.uuid4())
     )
     train_id: Mapped[str] = mapped_column(
-        String(36), ForeignKey("trains.id", ondelete="CASCADE"), nullable=False, index=True
+        String(36),
+        ForeignKey("trains.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
     )
     coach_number: Mapped[str] = mapped_column(String(10), nullable=False)
     seat_class: Mapped[SeatClass] = mapped_column(

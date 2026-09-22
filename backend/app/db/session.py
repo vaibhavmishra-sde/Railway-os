@@ -1,14 +1,13 @@
 """SQLAlchemy engine, session factory, and database connectivity."""
 
 from sqlalchemy import create_engine, text
-from sqlalchemy.orm import sessionmaker, DeclarativeBase
+from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
 from app.core.config import settings
 
-
 engine = create_engine(
     settings.database_url,
-    pool_pre_ping=True,          # verify connection before handing to app
+    pool_pre_ping=True,  # verify connection before handing to app
     pool_size=5,
     max_overflow=10,
     echo=False,
@@ -19,6 +18,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 class Base(DeclarativeBase):
     """Shared declarative base for all ORM models."""
+
     pass
 
 

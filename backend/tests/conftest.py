@@ -29,7 +29,9 @@ def test_engine():
     """Create the test engine and apply DDL once for the whole test session."""
     engine = create_engine(
         TEST_DATABASE_URL,
-        connect_args={"check_same_thread": False} if "sqlite" in TEST_DATABASE_URL else {},
+        connect_args={"check_same_thread": False}
+        if "sqlite" in TEST_DATABASE_URL
+        else {},
     )
     Base.metadata.create_all(engine)
     yield engine
