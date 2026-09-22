@@ -18,7 +18,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from app.db.session import Base
+from app.db.session import Base, get_db
 from app.main import create_app
 
 TEST_DATABASE_URL = os.getenv("TEST_DATABASE_URL", "sqlite:///:memory:")
@@ -53,7 +53,13 @@ def db_session(test_engine):
 
 
 @pytest.fixture
-def client() -> TestClient:
+def client(db_session) -> TestClient:
     """Return an isolated FastAPI test client for the RailwayOS application."""
-    with TestClient(create_app()) as test_client:
+    application = create_app()
+
+    def override_get_db():
+        yield db_session
+
+    application.dependency_overrides[get_db] = override_get_db
+    with TestClient(application) as test_client:
         yield test_client
