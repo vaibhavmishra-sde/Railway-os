@@ -89,3 +89,15 @@ class TrainResponse(BaseModel):
     is_active: bool
     created_at: datetime
     updated_at: datetime
+
+
+class CoachResponse(BaseModel):
+    """Public representation of one coach in a trainset."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    id: str
+    train_id: str
+    coach_number: str
+    seat_class: SeatClass
+    total_seats: int
