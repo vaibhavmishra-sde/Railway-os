@@ -23,6 +23,7 @@ A full-stack railway operations platform built as a portfolio project.
 | 13 | Add database test fixture strategy and separate test database configuration | Done |
 | 14 | Review Week 2: refactor imports, document architecture decisions, and run full checks | Done |
 | 15 | Design ERD for stations, trains, routes, services, stops, coaches, and seats; commit model stubs | Done |
+| 16 | Implement Station model, migration, schemas, validation, and API | Done |
 
 ## Backend API
 
@@ -35,6 +36,12 @@ Start the application from the `backend` directory:
 The liveness endpoint is available at `http://127.0.0.1:8000/health` and returns
 the service name, version, and an `ok` status. Versioned clients may use
 `/api/v1/health`.
+
+## Stations API
+
+`GET /api/v1/stations` lists active stations in station-code order. `POST
+/api/v1/stations` creates a station for the synthetic network; station codes are
+trimmed, normalized to uppercase, and must be unique.
 
 ## Quick Start
 

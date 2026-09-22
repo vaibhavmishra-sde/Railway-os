@@ -9,7 +9,9 @@ from app.core.metadata import API_PREFIX, APP_NAME, APP_VERSION
 def create_app() -> FastAPI:
     """Create the RailwayOS API application."""
     application = FastAPI(title=APP_NAME, version=APP_VERSION)
+    application.include_router(health_router)
     from app.api.v1.router import api_router
+
     application.include_router(api_router, prefix=API_PREFIX)
     return application
 
