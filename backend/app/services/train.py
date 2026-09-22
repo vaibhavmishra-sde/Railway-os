@@ -18,4 +18,6 @@ def create_train(session: Session, payload: TrainCreate) -> Train:
 
 
 def add_coach(session: Session, train: Train, payload: CoachCreate) -> Coach:
-    return train_repository.create_coach(session, train_id=train.id, **payload.model_dump())
+    return train_repository.create_coach(
+        session, train_id=train.id, **payload.model_dump()
+    )

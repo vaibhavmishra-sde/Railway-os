@@ -15,7 +15,9 @@ def get_train(session: Session, train_id: str) -> Train | None:
 
 
 def list_coaches(session: Session, train_id: str) -> list[Coach]:
-    statement = select(Coach).where(Coach.train_id == train_id).order_by(Coach.coach_number)
+    statement = (
+        select(Coach).where(Coach.train_id == train_id).order_by(Coach.coach_number)
+    )
     return list(session.scalars(statement))
 
 

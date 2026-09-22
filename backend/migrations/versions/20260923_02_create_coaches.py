@@ -10,7 +10,14 @@ depends_on = None
 
 
 def upgrade() -> None:
-    seat_class = sa.Enum("FIRST_AC", "SECOND_AC", "THIRD_AC", "SLEEPER", "GENERAL", name="seat_class_enum")
+    seat_class = sa.Enum(
+        "FIRST_AC",
+        "SECOND_AC",
+        "THIRD_AC",
+        "SLEEPER",
+        "GENERAL",
+        name="seat_class_enum",
+    )
     seat_class.create(op.get_bind(), checkfirst=True)
     op.create_table(
         "coaches",

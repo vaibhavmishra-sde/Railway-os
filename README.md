@@ -24,6 +24,7 @@ A full-stack railway operations platform built as a portfolio project.
 | 14 | Review Week 2: refactor imports, document architecture decisions, and run full checks | Done |
 | 15 | Design ERD for stations, trains, routes, services, stops, coaches, and seats; commit model stubs | Done |
 | 16 | Implement Station model, migration, schemas, validation, and API | Done |
+| 17 | Implement Train and Coach models, migrations, validation, and API | Done |
 
 ## Backend API
 
@@ -42,6 +43,12 @@ the service name, version, and an `ok` status. Versioned clients may use
 `GET /api/v1/stations` lists active stations in station-code order. `POST
 /api/v1/stations` creates a station for the synthetic network; station codes are
 trimmed, normalized to uppercase, and must be unique.
+
+## Trains API
+
+`POST /api/v1/trains` creates a trainset with a unique numeric train number.
+Use `POST /api/v1/trains/{train_id}/coaches` to add a coach and `GET
+/api/v1/trains/{train_id}/coaches` to retrieve its ordered coach list.
 
 ## Quick Start
 
