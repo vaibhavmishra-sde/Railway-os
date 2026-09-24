@@ -101,3 +101,53 @@ class CoachResponse(BaseModel):
     coach_number: str
     seat_class: SeatClass
     total_seats: int
+
+
+class RouteCreate(BaseModel):
+    """Validated input for a named synthetic railway route."""
+
+    code: str = Field(min_length=2, max_length=20, examples=["NDLS-BCT"])
+    name: str = Field(min_length=2, max_length=200)
+    total_distance_km: float = Field(ge=0, le=10_000)
+
+    @field_validator("code")
+    @classmethod
+    def normalize_code(cls, value: str) -> str:
+        normalized = value.strip().upper()
+        if not all(character.isalnum() or character == "-" for character in normalized):
+            raise ValueError("Route code may contain letters, numbers, and hyphens only")
+        return normalized
+
+
+class RouteStopCreate(BaseModel):
+    """A station's ordered position along a route."""
+
+    station_id: str
+    stop_sequence: int = Field(ge=1)
+    distance_from_origin_km: float = Field(ge=0, le=10_000)
+
+
+class RouteResponse(BaseModel):
+    """Public representation of a route."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    id: str
+    code: str
+    name: str
+    total_distance_km: float
+    is_active: bool
+    created_at: datetime
+    updated_at: datetime
+
+
+class RouteStopResponse(BaseModel):
+    """Public representation of one route stop."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    id: str
+    route_id: str
+    station_id: str
+    stop_sequence: int
+    distance_from_origin_km: float
