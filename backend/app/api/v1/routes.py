@@ -28,20 +28,26 @@ def list_routes(db: Session = Depends(get_db)) -> list[RouteResponse]:  # noqa: 
 
 @router.post("", response_model=RouteResponse, status_code=status.HTTP_201_CREATED)
 def create_route_endpoint(
-    payload: RouteCreate, db: Session = Depends(get_db)  # noqa: B008
+    payload: RouteCreate,
+    db: Session = Depends(get_db),  # noqa: B008
 ) -> RouteResponse:
     try:
         return create_route(db, payload)
     except RouteCodeAlreadyExistsError as exc:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT, detail=str(exc)
+        ) from exc
 
 
 @router.get("/{route_id}/stops", response_model=list[RouteStopResponse])
 def get_route_stops(
-    route_id: str, db: Session = Depends(get_db)  # noqa: B008
+    route_id: str,
+    db: Session = Depends(get_db),  # noqa: B008
 ) -> list[RouteStopResponse]:
     if get(db, route_id) is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Route not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Route not found"
+        )
     return list_stops(db, route_id)
 
 
@@ -57,8 +63,12 @@ def add_route_stop_endpoint(
 ) -> RouteStopResponse:
     route = get(db, route_id)
     if route is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Route not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Route not found"
+        )
     try:
         return add_stop(db, route, payload)
     except RouteStopStationNotFoundError as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)
+        ) from exc

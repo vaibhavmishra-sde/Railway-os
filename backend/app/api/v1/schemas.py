@@ -116,7 +116,9 @@ class RouteCreate(BaseModel):
     def normalize_code(cls, value: str) -> str:
         normalized = value.strip().upper()
         if not all(character.isalnum() or character == "-" for character in normalized):
-            raise ValueError("Route code may contain letters, numbers, and hyphens only")
+            raise ValueError(
+                "Route code may contain letters, numbers, and hyphens only"
+            )
         return normalized
 
 

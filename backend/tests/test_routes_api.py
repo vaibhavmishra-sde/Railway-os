@@ -15,7 +15,11 @@ def test_create_route_add_stop_and_list_stops(client) -> None:
 
     stop_response = client.post(
         f"/api/v1/routes/{route_id}/stops",
-        json={"station_id": station["id"], "stop_sequence": 1, "distance_from_origin_km": 0},
+        json={
+            "station_id": station["id"],
+            "stop_sequence": 1,
+            "distance_from_origin_km": 0,
+        },
     )
     assert stop_response.status_code == 201
 

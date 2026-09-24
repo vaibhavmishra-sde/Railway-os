@@ -23,9 +23,12 @@ def create_service(session: Session, payload: TrainServiceCreate) -> TrainServic
         raise ServiceReferenceNotFoundError("Train not found")
     if route_repository.get(session, payload.route_id) is None:
         raise ServiceReferenceNotFoundError("Route not found")
-    if service_repository.get_by_train_and_date(
-        session, payload.train_id, payload.service_date
-    ) is not None:
+    if (
+        service_repository.get_by_train_and_date(
+            session, payload.train_id, payload.service_date
+        )
+        is not None
+    ):
         raise TrainServiceAlreadyExistsError(
             "This train already has a service on the selected date"
         )

@@ -25,7 +25,8 @@ router = APIRouter(prefix="/services", tags=["services"])
 
 @router.get("", response_model=list[TrainServiceResponse])
 def list_services(
-    service_date: date = Query(...), db: Session = Depends(get_db)  # noqa: B008
+    service_date: date = Query(...),
+    db: Session = Depends(get_db),  # noqa: B008
 ) -> list[TrainServiceResponse]:
     """List the scheduled train services for one calendar date."""
     return list_by_date(db, service_date)
@@ -35,22 +36,30 @@ def list_services(
     "", response_model=TrainServiceResponse, status_code=status.HTTP_201_CREATED
 )
 def create_service_endpoint(
-    payload: TrainServiceCreate, db: Session = Depends(get_db)  # noqa: B008
+    payload: TrainServiceCreate,
+    db: Session = Depends(get_db),  # noqa: B008
 ) -> TrainServiceResponse:
     try:
         return create_service(db, payload)
     except TrainServiceAlreadyExistsError as exc:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT, detail=str(exc)
+        ) from exc
     except ServiceReferenceNotFoundError as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)
+        ) from exc
 
 
 @router.get("/{service_id}/stops", response_model=list[ServiceStopResponse])
 def get_service_stops(
-    service_id: str, db: Session = Depends(get_db)  # noqa: B008
+    service_id: str,
+    db: Session = Depends(get_db),  # noqa: B008
 ) -> list[ServiceStopResponse]:
     if get(db, service_id) is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Service not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Service not found"
+        )
     return list_stops(db, service_id)
 
 
@@ -66,8 +75,12 @@ def add_service_stop_endpoint(
 ) -> ServiceStopResponse:
     service = get(db, service_id)
     if service is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Service not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Service not found"
+        )
     try:
         return add_stop(db, service, payload)
     except ServiceReferenceNotFoundError as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)
+        ) from exc
