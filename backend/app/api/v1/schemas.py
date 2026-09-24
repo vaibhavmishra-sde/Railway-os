@@ -1,10 +1,11 @@
 """Response models for version 1 endpoints."""
 
-from datetime import datetime
+from datetime import date, datetime, time
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
+from app.models.service import ServiceStatus
 from app.models.train import SeatClass
 
 
@@ -151,3 +152,49 @@ class RouteStopResponse(BaseModel):
     station_id: str
     stop_sequence: int
     distance_from_origin_km: float
+
+
+class TrainServiceCreate(BaseModel):
+    """Input for a dated train operation over a route."""
+
+    train_id: str
+    route_id: str
+    service_date: date
+
+
+class ServiceStopCreate(BaseModel):
+    """A planned station call on a dated service."""
+
+    station_id: str
+    stop_sequence: int = Field(ge=1)
+    scheduled_arrival: time | None = None
+    scheduled_departure: time | None = None
+    platform_number: str | None = Field(default=None, max_length=10)
+
+
+class TrainServiceResponse(BaseModel):
+    """Public representation of a dated service."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    id: str
+    train_id: str
+    route_id: str
+    service_date: date
+    status: ServiceStatus
+    created_at: datetime
+    updated_at: datetime
+
+
+class ServiceStopResponse(BaseModel):
+    """Public representation of one timetable stop."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    id: str
+    service_id: str
+    station_id: str
+    stop_sequence: int
+    scheduled_arrival: time | None
+    scheduled_departure: time | None
+    platform_number: str | None
