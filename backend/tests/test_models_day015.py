@@ -104,6 +104,15 @@ def test_coach_unique_constraint(test_engine):
     assert {"train_id", "coach_number"} in uq_col_sets
 
 
+def test_seat_unique_constraint(test_engine):
+    """Seat numbers are unique within each coach."""
+    from sqlalchemy import inspect
+
+    uqs = inspect(test_engine).get_unique_constraints("seats")
+    uq_col_sets = [set(u["column_names"]) for u in uqs]
+    assert {"coach_id", "seat_number"} in uq_col_sets
+
+
 def test_route_stop_unique_constraints(test_engine):
     """RouteStop table has both unique constraints."""
     from sqlalchemy import inspect
