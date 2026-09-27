@@ -14,3 +14,7 @@ depend on private or production railway data.
 The catalog is designed to be deterministic and safe to reseed. Future seed
 commands must identify records by their stable codes rather than generated
 UUIDs.
+
+The code catalog currently contains 12 stations, 3 connected routes, and 5
+dated service examples. It is exposed through `app.data.network` and checked
+by `backend/tests/test_network_catalog.py` before seed-command work begins.
