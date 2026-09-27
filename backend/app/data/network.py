@@ -45,4 +45,10 @@ ROUTES: tuple[RouteSeed, ...] = (
     RouteSeed("NCR-HBR", "North City to Harbor Central", ("NCR", "RIV", "HIL", "LAK", "MKT", "GRN", "CRS", "SUN", "BAY", "PAL", "HBR"), 798.0),
     RouteSeed("RIV-CST", "Riverside to Coastal Terminal", ("RIV", "HIL", "LAK", "MKT", "GRN", "CRS", "SUN", "BAY", "PAL", "HBR", "CST"), 770.0),
 )
-SERVICES: tuple[ServiceSeed, ...] = ()
+SERVICES: tuple[ServiceSeed, ...] = (
+    ServiceSeed("12001", "NCR-CST", "2026-10-01"),
+    ServiceSeed("12002", "NCR-CST", "2026-10-01"),
+    ServiceSeed("12003", "NCR-HBR", "2026-10-01"),
+    ServiceSeed("12004", "RIV-CST", "2026-10-02"),
+    ServiceSeed("12005", "NCR-CST", "2026-10-02"),
+)
