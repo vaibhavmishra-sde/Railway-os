@@ -1,6 +1,7 @@
 """Static catalog definitions for the Day 22 synthetic railway network."""
 
 from dataclasses import dataclass
+from datetime import date
 
 
 @dataclass(frozen=True, slots=True)
@@ -72,3 +73,7 @@ def validate_catalog() -> None:
     for service in SERVICES:
         if service.route_code not in route_codes:
             raise ValueError(f"service {service.train_number} references an unknown route")
+        try:
+            date.fromisoformat(service.service_date)
+        except ValueError as exc:
+            raise ValueError(f"service {service.train_number} has an invalid date") from exc
