@@ -2,7 +2,7 @@
 
 A full-stack railway operations platform built as a portfolio project.
 
-**Current milestone:** Day 15 complete — Week 3 started; ERD designed and all core ORM models (Station, Train, Coach, Seat, Route, RouteStop, TrainService, ServiceStop) committed.
+**Current milestone:** Day 22 in progress — deterministic synthetic network catalog defined for seed and demo work.
 
 ## Progress
 
