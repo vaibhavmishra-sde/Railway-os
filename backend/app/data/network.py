@@ -52,3 +52,23 @@ SERVICES: tuple[ServiceSeed, ...] = (
     ServiceSeed("12004", "RIV-CST", "2026-10-02"),
     ServiceSeed("12005", "NCR-CST", "2026-10-02"),
 )
+
+
+def validate_catalog() -> None:
+    """Raise ``ValueError`` when catalog references or invariants are invalid."""
+    station_codes = {station.code for station in STATIONS}
+    if len(station_codes) != len(STATIONS):
+        raise ValueError("station codes must be unique")
+    route_codes = {route.code for route in ROUTES}
+    if len(route_codes) != len(ROUTES):
+        raise ValueError("route codes must be unique")
+    for route in ROUTES:
+        if len(route.station_codes) < 3:
+            raise ValueError(f"route {route.code} needs at least three stations")
+        if not set(route.station_codes) <= station_codes:
+            raise ValueError(f"route {route.code} references an unknown station")
+        if route.distance_km <= 0:
+            raise ValueError(f"route {route.code} must have positive distance")
+    for service in SERVICES:
+        if service.route_code not in route_codes:
+            raise ValueError(f"service {service.train_number} references an unknown route")
