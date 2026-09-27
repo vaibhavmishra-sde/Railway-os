@@ -26,6 +26,19 @@ class ServiceSeed:
     service_date: str
 
 
-STATIONS: tuple[StationSeed, ...] = ()
+STATIONS: tuple[StationSeed, ...] = (
+    StationSeed("NCR", "North City Central", "North City", "Northland"),
+    StationSeed("RIV", "Riverside Junction", "Riverside", "Northland"),
+    StationSeed("HIL", "Hillview", "Hillview", "Northland"),
+    StationSeed("LAK", "Lake Town", "Lake Town", "Centralia"),
+    StationSeed("MKT", "Market Square", "Market City", "Centralia"),
+    StationSeed("GRN", "Greenfield", "Greenfield", "Centralia"),
+    StationSeed("CRS", "Crossroads", "Crossroads", "Centralia"),
+    StationSeed("SUN", "Sunport", "Sunport", "Southland"),
+    StationSeed("BAY", "Bayview", "Bayview", "Southland"),
+    StationSeed("PAL", "Palmgrove", "Palmgrove", "Southland"),
+    StationSeed("HBR", "Harbor Central", "Harbor City", "Southland"),
+    StationSeed("CST", "Coastal Terminal", "Coastal City", "Southland"),
+)
 ROUTES: tuple[RouteSeed, ...] = ()
 SERVICES: tuple[ServiceSeed, ...] = ()
