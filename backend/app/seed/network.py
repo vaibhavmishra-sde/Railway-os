@@ -1,0 +1,54 @@
+"""Idempotent seed operations for the synthetic station network."""
+
+from sqlalchemy import select
+from sqlalchemy.orm import Session
+
+from app.data.network import ROUTES, STATIONS, validate_catalog
+from app.models.route import Route, RouteStop
+from app.models.station import Station
+
+
+def seed_stations(session: Session) -> dict[str, Station]:
+    """Insert catalog stations that are missing and return all catalog stations."""
+    validate_catalog()
+    codes = [item.code for item in STATIONS]
+    existing = {station.code: station for station in session.scalars(select(Station).where(Station.code.in_(codes)))}
+    for item in STATIONS:
+        if item.code not in existing:
+            station = Station(code=item.code, name=item.name, city=item.city, state=item.state)
+            session.add(station)
+            existing[item.code] = station
+    session.flush()
+    return existing
+
+
+def seed_routes(session: Session, stations: dict[str, Station]) -> dict[str, Route]:
+    """Insert missing routes and ordered stops without duplicating existing rows."""
+    codes = [item.code for item in ROUTES]
+    existing = {route.code: route for route in session.scalars(select(Route).where(Route.code.in_(codes)))}
+    for item in ROUTES:
+        route = existing.get(item.code)
+        if route is None:
+            route = Route(code=item.code, name=item.name, total_distance_km=item.distance_km)
+            session.add(route)
+            session.flush()
+            existing[item.code] = route
+        current = {stop.stop_sequence for stop in session.scalars(select(RouteStop).where(RouteStop.route_id == route.id))}
+        for sequence, station_code in enumerate(item.station_codes, start=1):
+            if sequence not in current:
+                session.add(RouteStop(
+                    route_id=route.id,
+                    station_id=stations[station_code].id,
+                    stop_sequence=sequence,
+                    distance_from_origin_km=item.distance_km * (sequence - 1) / (len(item.station_codes) - 1),
+                ))
+    session.flush()
+    return existing
+
+
+def seed_network(session: Session) -> tuple[dict[str, Station], dict[str, Route]]:
+    """Seed stations and routes in one transaction managed by the caller."""
+    stations = seed_stations(session)
+    routes = seed_routes(session, stations)
+    session.commit()
+    return stations, routes
