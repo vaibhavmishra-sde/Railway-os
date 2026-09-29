@@ -3,9 +3,19 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.data.network import ROUTES, STATIONS, validate_catalog
+from app.data.network import ROUTES, SERVICES, STATIONS, validate_catalog
 from app.models.route import Route, RouteStop
 from app.models.station import Station
+from app.models.train import Train
+
+
+TRAIN_CATALOG = {
+    "12001": "Coastal Express",
+    "12002": "Coastal Express Evening",
+    "12003": "Harbor Link",
+    "12004": "Riverside Coastal",
+    "12005": "Coastal Express Return",
+}
 
 
 def seed_stations(session: Session) -> dict[str, Station]:
@@ -52,3 +62,16 @@ def seed_network(session: Session) -> tuple[dict[str, Station], dict[str, Route]
     routes = seed_routes(session, stations)
     session.commit()
     return stations, routes
+
+
+def seed_trains(session: Session) -> dict[str, Train]:
+    """Insert the trains referenced by the synthetic service catalog."""
+    numbers = [item.train_number for item in SERVICES]
+    existing = {train.number: train for train in session.scalars(select(Train).where(Train.number.in_(numbers)))}
+    for number in numbers:
+        if number not in existing:
+            train = Train(number=number, name=TRAIN_CATALOG[number])
+            session.add(train)
+            existing[number] = train
+    session.flush()
+    return existing
