@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from app.data.network import ROUTES, SERVICES, STATIONS, validate_catalog
 from app.models.route import Route, RouteStop
 from app.models.station import Station
+from app.models.seat import BerthType, Seat
 from app.models.train import Coach, SeatClass, Train
 
 
@@ -88,5 +89,20 @@ def seed_coaches(session: Session, trains: dict[str, Train]) -> list[Coach]:
                 coach = Coach(train_id=train.id, coach_number=number, seat_class=seat_class, total_seats=total_seats)
                 session.add(coach)
                 created.append(coach)
+    session.flush()
+    return created
+
+
+def seed_seats(session: Session, coaches: list[Coach]) -> list[Seat]:
+    """Create stable seat labels for newly seeded coaches."""
+    created: list[Seat] = []
+    for coach in coaches:
+        existing = {seat.seat_number for seat in session.scalars(select(Seat).where(Seat.coach_id == coach.id))}
+        for number in range(1, coach.total_seats + 1):
+            label = str(number)
+            if label not in existing:
+                seat = Seat(coach_id=coach.id, seat_number=label, berth_type=BerthType.SEAT)
+                session.add(seat)
+                created.append(seat)
     session.flush()
     return created

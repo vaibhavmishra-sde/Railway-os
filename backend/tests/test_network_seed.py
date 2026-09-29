@@ -3,9 +3,10 @@ from sqlalchemy.orm import Session
 
 from app.db.session import Base
 from app.models.route import Route, RouteStop
+from app.models.seat import Seat
 from app.models.station import Station
 from app.models.train import Coach, Train
-from app.seed.network import seed_coaches, seed_network, seed_trains
+from app.seed.network import seed_coaches, seed_network, seed_seats, seed_trains
 
 
 def test_network_seed_is_idempotent():
@@ -49,3 +50,13 @@ def test_coach_seed_gives_each_train_three_classes():
         seed_coaches(session, trains)
         session.commit()
         assert len(session.scalars(select(Coach)).all()) == 15
+
+
+def test_seat_seed_creates_expected_capacity():
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    with Session(engine) as session:
+        coaches = seed_coaches(session, seed_trains(session))
+        seed_seats(session, coaches)
+        session.commit()
+        assert len(session.scalars(select(Seat)).all()) == 90
