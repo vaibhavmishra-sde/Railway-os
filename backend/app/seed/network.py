@@ -3,10 +3,13 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from datetime import date, time
+
 from app.data.network import ROUTES, SERVICES, STATIONS, validate_catalog
 from app.models.route import Route, RouteStop
 from app.models.station import Station
 from app.models.seat import BerthType, Seat
+from app.models.service import ServiceStop, TrainService
 from app.models.train import Coach, SeatClass, Train
 
 
@@ -104,5 +107,35 @@ def seed_seats(session: Session, coaches: list[Coach]) -> list[Seat]:
                 seat = Seat(coach_id=coach.id, seat_number=label, berth_type=BerthType.SEAT)
                 session.add(seat)
                 created.append(seat)
+    session.flush()
+    return created
+
+
+def seed_services(session: Session, trains: dict[str, Train], routes: dict[str, Route]) -> dict[str, TrainService]:
+    """Insert dated train services from the catalog."""
+    result: dict[str, TrainService] = {}
+    for item in SERVICES:
+        key = f"{item.train_number}:{item.service_date}"
+        service = session.scalar(select(TrainService).join(Train).where(Train.number == item.train_number, TrainService.service_date == date.fromisoformat(item.service_date)))
+        if service is None:
+            service = TrainService(train_id=trains[item.train_number].id, route_id=routes[item.route_code].id, service_date=date.fromisoformat(item.service_date))
+            session.add(service)
+            session.flush()
+        result[key] = service
+    session.flush()
+    return result
+
+
+def seed_service_stops(session: Session, services: dict[str, TrainService]) -> list[ServiceStop]:
+    """Create hourly timetable stops for each seeded service."""
+    created: list[ServiceStop] = []
+    for service in services.values():
+        route_stops = session.scalars(select(RouteStop).where(RouteStop.route_id == service.route_id).order_by(RouteStop.stop_sequence)).all()
+        existing = {stop.stop_sequence for stop in session.scalars(select(ServiceStop).where(ServiceStop.service_id == service.id))}
+        for route_stop in route_stops:
+            if route_stop.stop_sequence not in existing:
+                departure = time(6 + (route_stop.stop_sequence - 1), 0)
+                created.append(ServiceStop(service_id=service.id, station_id=route_stop.station_id, stop_sequence=route_stop.stop_sequence, scheduled_arrival=None if route_stop.stop_sequence == 1 else departure, scheduled_departure=None if route_stop.stop_sequence == len(route_stops) else (departure if route_stop.stop_sequence == 1 else (time(6 + route_stop.stop_sequence, 0))),))
+                session.add(created[-1])
     session.flush()
     return created
