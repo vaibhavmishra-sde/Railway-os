@@ -70,6 +70,8 @@ def validate_catalog() -> None:
             raise ValueError(f"route {route.code} references an unknown station")
         if route.distance_km <= 0:
             raise ValueError(f"route {route.code} must have positive distance")
+        if len(set(route.station_codes)) != len(route.station_codes):
+            raise ValueError(f"route {route.code} cannot repeat a station")
     for service in SERVICES:
         if service.route_code not in route_codes:
             raise ValueError(f"service {service.train_number} references an unknown route")

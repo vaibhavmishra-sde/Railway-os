@@ -23,3 +23,7 @@ def test_service_numbers_and_dates_are_unique_pairs():
     pairs = {(service.train_number, service.service_date) for service in SERVICES}
     assert len(pairs) == len(SERVICES)
     assert all(len(service.train_number) == 5 for service in SERVICES)
+
+
+def test_routes_do_not_repeat_stations():
+    assert all(len(route.station_codes) == len(set(route.station_codes)) for route in ROUTES)
