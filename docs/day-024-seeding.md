@@ -13,3 +13,6 @@ Run it from the backend directory after applying migrations:
 The seed uses stable station, route, and train catalog identifiers. Running it
 again does not create duplicate rows, so it is safe for local demo resets and
 development startup scripts.
+
+See [Timetable API usage](day-024-api-usage.md) for the read-only service and
+stop endpoints.
