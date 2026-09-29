@@ -4,8 +4,8 @@ from sqlalchemy.orm import Session
 from app.db.session import Base
 from app.models.route import Route, RouteStop
 from app.models.station import Station
-from app.models.train import Train
-from app.seed.network import seed_network, seed_trains
+from app.models.train import Coach, Train
+from app.seed.network import seed_coaches, seed_network, seed_trains
 
 
 def test_network_seed_is_idempotent():
@@ -39,3 +39,13 @@ def test_train_seed_uses_service_catalog_numbers():
         session.commit()
         assert set(trains) == {"12001", "12002", "12003", "12004", "12005"}
         assert len(session.scalars(select(Train)).all()) == 5
+
+
+def test_coach_seed_gives_each_train_three_classes():
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    with Session(engine) as session:
+        trains = seed_trains(session)
+        seed_coaches(session, trains)
+        session.commit()
+        assert len(session.scalars(select(Coach)).all()) == 15

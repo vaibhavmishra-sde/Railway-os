@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from app.data.network import ROUTES, SERVICES, STATIONS, validate_catalog
 from app.models.route import Route, RouteStop
 from app.models.station import Station
-from app.models.train import Train
+from app.models.train import Coach, SeatClass, Train
 
 
 TRAIN_CATALOG = {
@@ -16,6 +16,7 @@ TRAIN_CATALOG = {
     "12004": "Riverside Coastal",
     "12005": "Coastal Express Return",
 }
+COACH_LAYOUT = (("A1", SeatClass.FIRST_AC, 4), ("B1", SeatClass.SECOND_AC, 6), ("S1", SeatClass.SLEEPER, 8))
 
 
 def seed_stations(session: Session) -> dict[str, Station]:
@@ -75,3 +76,17 @@ def seed_trains(session: Session) -> dict[str, Train]:
             existing[number] = train
     session.flush()
     return existing
+
+
+def seed_coaches(session: Session, trains: dict[str, Train]) -> list[Coach]:
+    """Give every seeded train a deterministic coach layout."""
+    created: list[Coach] = []
+    for train in trains.values():
+        existing = {coach.coach_number for coach in train.coaches}
+        for number, seat_class, total_seats in COACH_LAYOUT:
+            if number not in existing:
+                coach = Coach(train_id=train.id, coach_number=number, seat_class=seat_class, total_seats=total_seats)
+                session.add(coach)
+                created.append(coach)
+    session.flush()
+    return created
