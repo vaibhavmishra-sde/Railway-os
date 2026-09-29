@@ -8,8 +8,7 @@ def test_seat_schema_has_foreign_key_and_index(test_engine):
 
     foreign_keys = inspector.get_foreign_keys("seats")
     assert any(
-        fk["referred_table"] == "coaches"
-        and fk["constrained_columns"] == ["coach_id"]
+        fk["referred_table"] == "coaches" and fk["constrained_columns"] == ["coach_id"]
         for fk in foreign_keys
     )
 
@@ -29,4 +28,7 @@ def test_core_tables_have_expected_unique_constraints(test_engine):
         assert any(set(item["column_names"]) == columns for item in constraints)
 
     train_indexes = inspector.get_indexes("trains")
-    assert any(index["unique"] and index["column_names"] == ["number"] for index in train_indexes)
+    assert any(
+        index["unique"] and index["column_names"] == ["number"]
+        for index in train_indexes
+    )

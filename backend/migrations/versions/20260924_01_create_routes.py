@@ -36,8 +36,12 @@ def upgrade() -> None:
         sa.UniqueConstraint("route_id", "station_id", name="uq_route_stop_station"),
         sa.UniqueConstraint("route_id", "stop_sequence", name="uq_route_stop_sequence"),
     )
-    op.create_index(op.f("ix_route_stops_route_id"), "route_stops", ["route_id"], unique=False)
-    op.create_index(op.f("ix_route_stops_station_id"), "route_stops", ["station_id"], unique=False)
+    op.create_index(
+        op.f("ix_route_stops_route_id"), "route_stops", ["route_id"], unique=False
+    )
+    op.create_index(
+        op.f("ix_route_stops_station_id"), "route_stops", ["station_id"], unique=False
+    )
 
 
 def downgrade() -> None:

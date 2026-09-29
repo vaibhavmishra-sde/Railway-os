@@ -26,4 +26,6 @@ def test_service_numbers_and_dates_are_unique_pairs():
 
 
 def test_routes_do_not_repeat_stations():
-    assert all(len(route.station_codes) == len(set(route.station_codes)) for route in ROUTES)
+    assert all(
+        len(route.station_codes) == len(set(route.station_codes)) for route in ROUTES
+    )

@@ -42,9 +42,37 @@ STATIONS: tuple[StationSeed, ...] = (
     StationSeed("CST", "Coastal Terminal", "Coastal City", "Southland"),
 )
 ROUTES: tuple[RouteSeed, ...] = (
-    RouteSeed("NCR-CST", "North City to Coastal Terminal", ("NCR", "RIV", "HIL", "LAK", "MKT", "GRN", "CRS", "SUN", "BAY", "PAL", "HBR", "CST"), 842.0),
-    RouteSeed("NCR-HBR", "North City to Harbor Central", ("NCR", "RIV", "HIL", "LAK", "MKT", "GRN", "CRS", "SUN", "BAY", "PAL", "HBR"), 798.0),
-    RouteSeed("RIV-CST", "Riverside to Coastal Terminal", ("RIV", "HIL", "LAK", "MKT", "GRN", "CRS", "SUN", "BAY", "PAL", "HBR", "CST"), 770.0),
+    RouteSeed(
+        "NCR-CST",
+        "North City to Coastal Terminal",
+        (
+            "NCR",
+            "RIV",
+            "HIL",
+            "LAK",
+            "MKT",
+            "GRN",
+            "CRS",
+            "SUN",
+            "BAY",
+            "PAL",
+            "HBR",
+            "CST",
+        ),
+        842.0,
+    ),
+    RouteSeed(
+        "NCR-HBR",
+        "North City to Harbor Central",
+        ("NCR", "RIV", "HIL", "LAK", "MKT", "GRN", "CRS", "SUN", "BAY", "PAL", "HBR"),
+        798.0,
+    ),
+    RouteSeed(
+        "RIV-CST",
+        "Riverside to Coastal Terminal",
+        ("RIV", "HIL", "LAK", "MKT", "GRN", "CRS", "SUN", "BAY", "PAL", "HBR", "CST"),
+        770.0,
+    ),
 )
 SERVICES: tuple[ServiceSeed, ...] = (
     ServiceSeed("12001", "NCR-CST", "2026-10-01"),
@@ -74,8 +102,12 @@ def validate_catalog() -> None:
             raise ValueError(f"route {route.code} cannot repeat a station")
     for service in SERVICES:
         if service.route_code not in route_codes:
-            raise ValueError(f"service {service.train_number} references an unknown route")
+            raise ValueError(
+                f"service {service.train_number} references an unknown route"
+            )
         try:
             date.fromisoformat(service.service_date)
         except ValueError as exc:
-            raise ValueError(f"service {service.train_number} has an invalid date") from exc
+            raise ValueError(
+                f"service {service.train_number} has an invalid date"
+            ) from exc

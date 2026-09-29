@@ -7,7 +7,16 @@ from app.models.seat import Seat
 from app.models.service import ServiceStop, TrainService
 from app.models.station import Station
 from app.models.train import Coach, Train
-from app.seed.network import seed_coaches, seed_full_network, seed_network, seed_seats, seed_service_stops, seed_services, seed_trains, validate_service_stops
+from app.seed.network import (
+    seed_coaches,
+    seed_full_network,
+    seed_network,
+    seed_seats,
+    seed_service_stops,
+    seed_services,
+    seed_trains,
+    validate_service_stops,
+)
 
 
 def test_network_seed_is_idempotent():
@@ -28,7 +37,11 @@ def test_route_stops_are_ordered_and_have_cumulative_distance():
         seed_network(session)
         route = session.scalar(select(Route).where(Route.code == "NCR-CST"))
         assert route is not None
-        stops = session.scalars(select(RouteStop).where(RouteStop.route_id == route.id).order_by(RouteStop.stop_sequence)).all()
+        stops = session.scalars(
+            select(RouteStop)
+            .where(RouteStop.route_id == route.id)
+            .order_by(RouteStop.stop_sequence)
+        ).all()
         assert stops[0].distance_from_origin_km == 0
         assert stops[-1].distance_from_origin_km == route.total_distance_km
 
@@ -81,7 +94,15 @@ def test_full_seed_can_be_repeated_without_new_rows():
     with Session(engine) as session:
         first = seed_full_network(session)
         second = seed_full_network(session)
-        assert first == {"stations": 12, "routes": 3, "trains": 5, "coaches": 15, "seats": 90, "services": 5, "stops": 58}
+        assert first == {
+            "stations": 12,
+            "routes": 3,
+            "trains": 5,
+            "coaches": 15,
+            "seats": 90,
+            "services": 5,
+            "stops": 58,
+        }
         assert second["stations"] == 12
         assert len(session.scalars(select(ServiceStop)).all()) == 58
 
