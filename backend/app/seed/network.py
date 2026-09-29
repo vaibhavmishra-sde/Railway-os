@@ -151,3 +151,14 @@ def seed_full_network(session: Session) -> dict[str, int]:
     stops = seed_service_stops(session, services)
     session.commit()
     return {"stations": len(stations), "routes": len(routes), "trains": len(trains), "coaches": len(coaches), "seats": len(seats), "services": len(services), "stops": len(stops)}
+
+
+def validate_service_stops(stops: list[ServiceStop]) -> None:
+    """Reject malformed timetable boundaries before a demo seed is accepted."""
+    ordered = sorted(stops, key=lambda stop: stop.stop_sequence)
+    if not ordered:
+        raise ValueError("a service must contain at least one stop")
+    if ordered[0].scheduled_arrival is not None:
+        raise ValueError("the first stop cannot have an arrival time")
+    if ordered[-1].scheduled_departure is not None:
+        raise ValueError("the final stop cannot have a departure time")

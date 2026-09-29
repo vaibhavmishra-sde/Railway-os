@@ -7,7 +7,7 @@ from app.models.seat import Seat
 from app.models.service import ServiceStop, TrainService
 from app.models.station import Station
 from app.models.train import Coach, Train
-from app.seed.network import seed_coaches, seed_full_network, seed_network, seed_seats, seed_service_stops, seed_services, seed_trains
+from app.seed.network import seed_coaches, seed_full_network, seed_network, seed_seats, seed_service_stops, seed_services, seed_trains, validate_service_stops
 
 
 def test_network_seed_is_idempotent():
@@ -84,3 +84,13 @@ def test_full_seed_can_be_repeated_without_new_rows():
         assert first == {"stations": 12, "routes": 3, "trains": 5, "coaches": 15, "seats": 90, "services": 5, "stops": 58}
         assert second["stations"] == 12
         assert len(session.scalars(select(ServiceStop)).all()) == 58
+
+
+def test_seeded_timetable_has_valid_boundaries():
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    with Session(engine) as session:
+        _, routes = seed_network(session)
+        services = seed_services(session, seed_trains(session), routes)
+        for service in services.values():
+            validate_service_stops(seed_service_stops(session, {"service": service}))
