@@ -108,6 +108,7 @@ bash scripts/check-backend.sh
 - [Architecture](docs/architecture.md)
 - [Entity Relationship Diagram](docs/erd.md)
 - [Day 15 ERD Design Notes](docs/day-015-erd-design.md)
+- [Day 24 Synthetic Timetable Seed](docs/day-024-seeding.md)
 
 ## Tech Stack
 
