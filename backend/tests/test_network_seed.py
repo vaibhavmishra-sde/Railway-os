@@ -7,7 +7,7 @@ from app.models.seat import Seat
 from app.models.service import ServiceStop, TrainService
 from app.models.station import Station
 from app.models.train import Coach, Train
-from app.seed.network import seed_coaches, seed_network, seed_seats, seed_service_stops, seed_services, seed_trains
+from app.seed.network import seed_coaches, seed_full_network, seed_network, seed_seats, seed_service_stops, seed_services, seed_trains
 
 
 def test_network_seed_is_idempotent():
@@ -72,4 +72,15 @@ def test_service_seed_creates_dated_services_and_stops():
         seed_service_stops(session, services)
         session.commit()
         assert len(session.scalars(select(TrainService)).all()) == 5
+        assert len(session.scalars(select(ServiceStop)).all()) == 58
+
+
+def test_full_seed_can_be_repeated_without_new_rows():
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    with Session(engine) as session:
+        first = seed_full_network(session)
+        second = seed_full_network(session)
+        assert first == {"stations": 12, "routes": 3, "trains": 5, "coaches": 15, "seats": 90, "services": 5, "stops": 58}
+        assert second["stations"] == 12
         assert len(session.scalars(select(ServiceStop)).all()) == 58

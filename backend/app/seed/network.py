@@ -139,3 +139,15 @@ def seed_service_stops(session: Session, services: dict[str, TrainService]) -> l
                 session.add(created[-1])
     session.flush()
     return created
+
+
+def seed_full_network(session: Session) -> dict[str, int]:
+    """Seed the complete demo catalog and return inserted/catalog counts."""
+    stations, routes = seed_network(session)
+    trains = seed_trains(session)
+    coaches = seed_coaches(session, trains)
+    seats = seed_seats(session, coaches)
+    services = seed_services(session, trains, routes)
+    stops = seed_service_stops(session, services)
+    session.commit()
+    return {"stations": len(stations), "routes": len(routes), "trains": len(trains), "coaches": len(coaches), "seats": len(seats), "services": len(services), "stops": len(stops)}
