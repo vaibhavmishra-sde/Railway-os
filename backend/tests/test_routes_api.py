@@ -42,3 +42,15 @@ def test_get_route_returns_route_and_missing_route_is_not_found(client) -> None:
 
     assert client.get(f"/api/v1/routes/{created['id']}").json()["code"] == "NDLS-BCT"
     assert client.get("/api/v1/routes/missing").status_code == 404
+
+
+def test_route_list_supports_search_and_pagination(client) -> None:
+    for code, name in (("NDLS-BCT", "Capital Express"), ("JP-ADI", "Desert Link")):
+        client.post(
+            "/api/v1/routes",
+            json={"code": code, "name": name, "total_distance_km": 500},
+        )
+
+    response = client.get("/api/v1/routes", params={"search": "desert", "limit": 1})
+    assert response.status_code == 200
+    assert [route["code"] for route in response.json()] == ["JP-ADI"]
