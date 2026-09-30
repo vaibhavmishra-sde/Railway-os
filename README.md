@@ -2,7 +2,7 @@
 
 A full-stack railway operations platform built as a portfolio project.
 
-**Current milestone:** Day 25 complete — station search, pagination, and detail APIs are available.
+**Current milestone:** Day 26 complete — station, train, and route discovery APIs are available.
 
 ## Progress
 
@@ -29,6 +29,7 @@ A full-stack railway operations platform built as a portfolio project.
 | 23 | Build idempotent station and route seed command | Done |
 | 24 | Extend seed data for trains, coaches, seats, services, and stops | Done |
 | 25 | Add station search, pagination, and detail API | Done |
+| 26 | Add train and route detail, search, and pagination APIs | Done |
 
 ## Backend API
 
@@ -55,6 +56,14 @@ trimmed, normalized to uppercase, and must be unique.
 `POST /api/v1/trains` creates a trainset with a unique numeric train number.
 Use `POST /api/v1/trains/{train_id}/coaches` to add a coach and `GET
 /api/v1/trains/{train_id}/coaches` to retrieve its ordered coach list.
+`GET /api/v1/trains` supports `search`, `offset`, and `limit`; individual trains
+are available at `/api/v1/trains/{train_id}`.
+
+## Routes API
+
+`GET /api/v1/routes` supports the same bounded search and pagination parameters.
+Use `/api/v1/routes/{route_id}` for route details and
+`/api/v1/routes/{route_id}/stops` for ordered stops.
 
 ## Quick Start
 
