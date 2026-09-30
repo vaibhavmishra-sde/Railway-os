@@ -76,6 +76,11 @@ From `backend/`, run:
 Check `http://127.0.0.1:8000/health` for a 200 response. The same endpoint is
 also exposed at `/api/v1/health` for versioned clients.
 
+The public discovery APIs are available under `/api/v1`: stations, trains, and
+routes each provide bounded list endpoints, while trains and routes also expose
+detail endpoints. List endpoints accept `search`, `offset`, and `limit` where
+supported; `limit` is capped at 100 to keep responses predictable.
+
 ## Quality Checks
 
 From the repository root, run the complete backend check suite:
