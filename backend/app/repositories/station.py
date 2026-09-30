@@ -11,11 +11,31 @@ def get_by_code(session: Session, code: str) -> Station | None:
     return session.scalar(select(Station).where(Station.code == code))
 
 
-def list_active(session: Session) -> list[Station]:
-    """Return active stations ordered for predictable public responses."""
-    return list(
-        session.scalars(select(Station).where(Station.is_active).order_by(Station.code))
+def get_active_by_id(session: Session, station_id: str) -> Station | None:
+    """Return an active station by its public identifier."""
+    return session.scalar(
+        select(Station).where(Station.id == station_id, Station.is_active)
     )
+
+
+def list_active(
+    session: Session,
+    *,
+    search: str | None = None,
+    offset: int = 0,
+    limit: int = 50,
+) -> list[Station]:
+    """Return active stations ordered for predictable public responses."""
+    statement = select(Station).where(Station.is_active)
+    if search:
+        pattern = f"%{search.strip()}%"
+        statement = statement.where(
+            Station.code.ilike(pattern)
+            | Station.name.ilike(pattern)
+            | Station.city.ilike(pattern)
+        )
+    statement = statement.order_by(Station.code).offset(offset).limit(limit)
+    return list(session.scalars(statement))
 
 
 def create(session: Session, **station_data: str) -> Station:
