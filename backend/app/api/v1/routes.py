@@ -1,6 +1,6 @@
 """Public synthetic route endpoints."""
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 from app.api.v1.schemas import (
@@ -22,8 +22,13 @@ router = APIRouter(prefix="/routes", tags=["routes"])
 
 
 @router.get("", response_model=list[RouteResponse])
-def list_routes(db: Session = Depends(get_db)) -> list[RouteResponse]:  # noqa: B008
-    return list_active(db)
+def list_routes(
+    search: str | None = Query(default=None, min_length=2, max_length=100),
+    offset: int = Query(default=0, ge=0),
+    limit: int = Query(default=50, ge=1, le=100),
+    db: Session = Depends(get_db),  # noqa: B008
+) -> list[RouteResponse]:
+    return list_active(db, search=search, offset=offset, limit=limit)
 
 
 @router.get("/{route_id}", response_model=RouteResponse)

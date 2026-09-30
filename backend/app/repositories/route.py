@@ -14,10 +14,14 @@ def get(session: Session, route_id: str) -> Route | None:
     return session.get(Route, route_id)
 
 
-def list_active(session: Session) -> list[Route]:
-    return list(
-        session.scalars(select(Route).where(Route.is_active).order_by(Route.code))
-    )
+def list_active(
+    session: Session, *, search: str | None = None, offset: int = 0, limit: int = 50
+) -> list[Route]:
+    statement = select(Route).where(Route.is_active)
+    if search:
+        pattern = f"%{search.strip()}%"
+        statement = statement.where(Route.code.ilike(pattern) | Route.name.ilike(pattern))
+    return list(session.scalars(statement.order_by(Route.code).offset(offset).limit(limit)))
 
 
 def list_stops(session: Session, route_id: str) -> list[RouteStop]:
