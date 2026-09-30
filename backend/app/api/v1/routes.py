@@ -28,6 +28,7 @@ def list_routes(
     limit: int = Query(default=50, ge=1, le=100),
     db: Session = Depends(get_db),  # noqa: B008
 ) -> list[RouteResponse]:
+    """List active routes with optional search and pagination."""
     return list_active(db, search=search, offset=offset, limit=limit)
 
 
