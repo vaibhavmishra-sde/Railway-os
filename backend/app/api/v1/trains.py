@@ -5,10 +5,25 @@ from sqlalchemy.orm import Session
 
 from app.api.v1.schemas import CoachCreate, CoachResponse, TrainCreate, TrainResponse
 from app.db.session import get_db
-from app.repositories.train import get_train, list_coaches
+from app.repositories.train import get_train, list_active_trains, list_coaches
 from app.services.train import TrainNumberAlreadyExistsError, add_coach, create_train
 
 router = APIRouter(prefix="/trains", tags=["trains"])
+
+
+@router.get("", response_model=list[TrainResponse])
+def list_trains(db: Session = Depends(get_db)) -> list[TrainResponse]:  # noqa: B008
+    """List active trains in numeric order."""
+    return list_active_trains(db)
+
+
+@router.get("/{train_id}", response_model=TrainResponse)
+def get_train_endpoint(train_id: str, db: Session = Depends(get_db)) -> TrainResponse:  # noqa: B008
+    """Return one train or a 404 response."""
+    train = get_train(db, train_id)
+    if train is None or not train.is_active:
+        raise HTTPException(status_code=404, detail="Train not found")
+    return train
 
 
 @router.post("", response_model=TrainResponse, status_code=status.HTTP_201_CREATED)

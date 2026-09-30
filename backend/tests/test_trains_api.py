@@ -24,3 +24,13 @@ def test_train_number_is_unique(client) -> None:
     payload = {"number": "12301", "name": "Rajdhani"}
     client.post("/api/v1/trains", json=payload)
     assert client.post("/api/v1/trains", json=payload).status_code == 409
+
+
+def test_list_and_get_train(client) -> None:
+    created = client.post(
+        "/api/v1/trains", json={"number": "12301", "name": "Rajdhani"}
+    ).json()
+
+    assert client.get("/api/v1/trains").json()[0]["number"] == "12301"
+    assert client.get(f"/api/v1/trains/{created['id']}").json()["name"] == "Rajdhani"
+    assert client.get("/api/v1/trains/missing").status_code == 404

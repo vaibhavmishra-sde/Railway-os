@@ -14,6 +14,13 @@ def get_train(session: Session, train_id: str) -> Train | None:
     return session.get(Train, train_id)
 
 
+def list_active_trains(session: Session) -> list[Train]:
+    """Return active trains in numeric order."""
+    return list(
+        session.scalars(select(Train).where(Train.is_active).order_by(Train.number))
+    )
+
+
 def list_coaches(session: Session, train_id: str) -> list[Coach]:
     statement = (
         select(Coach).where(Coach.train_id == train_id).order_by(Coach.coach_number)
