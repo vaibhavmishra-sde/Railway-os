@@ -2,7 +2,7 @@
 
 A full-stack railway operations platform built as a portfolio project.
 
-**Current milestone:** Day 22 in progress — deterministic synthetic network catalog defined for seed and demo work.
+**Current milestone:** Day 25 complete — station search, pagination, and detail APIs are available.
 
 ## Progress
 
@@ -25,6 +25,10 @@ A full-stack railway operations platform built as a portfolio project.
 | 15 | Design ERD for stations, trains, routes, services, stops, coaches, and seats; commit model stubs | Done |
 | 16 | Implement Station model, migration, schemas, validation, and API | Done |
 | 17 | Implement Train and Coach models, migrations, validation, and API | Done |
+| 22 | Define deterministic synthetic network catalog | Done |
+| 23 | Build idempotent station and route seed command | Done |
+| 24 | Extend seed data for trains, coaches, seats, services, and stops | Done |
+| 25 | Add station search, pagination, and detail API | Done |
 
 ## Backend API
 
@@ -40,7 +44,9 @@ the service name, version, and an `ok` status. Versioned clients may use
 
 ## Stations API
 
-`GET /api/v1/stations` lists active stations in station-code order. `POST
+`GET /api/v1/stations` lists active stations in station-code order. It accepts
+optional `search`, `offset`, and `limit` query parameters. `GET
+/api/v1/stations/{station_id}` returns one active station. `POST
 /api/v1/stations` creates a station for the synthetic network; station codes are
 trimmed, normalized to uppercase, and must be unique.
 
