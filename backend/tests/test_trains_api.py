@@ -43,3 +43,8 @@ def test_train_list_supports_search_and_pagination(client) -> None:
     response = client.get("/api/v1/trains", params={"search": "mumbai", "limit": 1})
     assert response.status_code == 200
     assert [train["number"] for train in response.json()] == ["12951"]
+
+
+def test_train_list_rejects_invalid_pagination(client) -> None:
+    assert client.get("/api/v1/trains", params={"limit": 0}).status_code == 422
+    assert client.get("/api/v1/trains", params={"limit": 101}).status_code == 422
