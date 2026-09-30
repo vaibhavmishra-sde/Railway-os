@@ -32,3 +32,13 @@ def test_route_code_is_unique(client) -> None:
     payload = {"code": "NDLS-BCT", "name": "Capital Express", "total_distance_km": 1384}
     assert client.post("/api/v1/routes", json=payload).status_code == 201
     assert client.post("/api/v1/routes", json=payload).status_code == 409
+
+
+def test_get_route_returns_route_and_missing_route_is_not_found(client) -> None:
+    created = client.post(
+        "/api/v1/routes",
+        json={"code": "NDLS-BCT", "name": "Capital Express", "total_distance_km": 1384},
+    ).json()
+
+    assert client.get(f"/api/v1/routes/{created['id']}").json()["code"] == "NDLS-BCT"
+    assert client.get("/api/v1/routes/missing").status_code == 404

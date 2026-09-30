@@ -26,6 +26,15 @@ def list_routes(db: Session = Depends(get_db)) -> list[RouteResponse]:  # noqa: 
     return list_active(db)
 
 
+@router.get("/{route_id}", response_model=RouteResponse)
+def get_route(route_id: str, db: Session = Depends(get_db)) -> RouteResponse:  # noqa: B008
+    """Return one active route or a 404 response."""
+    route = get(db, route_id)
+    if route is None or not route.is_active:
+        raise HTTPException(status_code=404, detail="Route not found")
+    return route
+
+
 @router.post("", response_model=RouteResponse, status_code=status.HTTP_201_CREATED)
 def create_route_endpoint(
     payload: RouteCreate,
