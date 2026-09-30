@@ -1,6 +1,6 @@
 """Train and coach endpoints."""
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 from app.api.v1.schemas import CoachCreate, CoachResponse, TrainCreate, TrainResponse
@@ -12,9 +12,14 @@ router = APIRouter(prefix="/trains", tags=["trains"])
 
 
 @router.get("", response_model=list[TrainResponse])
-def list_trains(db: Session = Depends(get_db)) -> list[TrainResponse]:  # noqa: B008
+def list_trains(
+    search: str | None = Query(default=None, min_length=2, max_length=100),
+    offset: int = Query(default=0, ge=0),
+    limit: int = Query(default=50, ge=1, le=100),
+    db: Session = Depends(get_db),  # noqa: B008
+) -> list[TrainResponse]:
     """List active trains in numeric order."""
-    return list_active_trains(db)
+    return list_active_trains(db, search=search, offset=offset, limit=limit)
 
 
 @router.get("/{train_id}", response_model=TrainResponse)

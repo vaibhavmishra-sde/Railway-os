@@ -14,11 +14,13 @@ def get_train(session: Session, train_id: str) -> Train | None:
     return session.get(Train, train_id)
 
 
-def list_active_trains(session: Session) -> list[Train]:
+def list_active_trains(session: Session, *, search: str | None = None, offset: int = 0, limit: int = 50) -> list[Train]:
     """Return active trains in numeric order."""
-    return list(
-        session.scalars(select(Train).where(Train.is_active).order_by(Train.number))
-    )
+    statement = select(Train).where(Train.is_active)
+    if search:
+        pattern = f"%{search.strip()}%"
+        statement = statement.where(Train.number.ilike(pattern) | Train.name.ilike(pattern))
+    return list(session.scalars(statement.order_by(Train.number).offset(offset).limit(limit)))
 
 
 def list_coaches(session: Session, train_id: str) -> list[Coach]:
