@@ -34,3 +34,12 @@ def test_list_and_get_train(client) -> None:
     assert client.get("/api/v1/trains").json()[0]["number"] == "12301"
     assert client.get(f"/api/v1/trains/{created['id']}").json()["name"] == "Rajdhani"
     assert client.get("/api/v1/trains/missing").status_code == 404
+
+
+def test_train_list_supports_search_and_pagination(client) -> None:
+    for number, name in (("12301", "Rajdhani"), ("12951", "Mumbai Express")):
+        client.post("/api/v1/trains", json={"number": number, "name": name})
+
+    response = client.get("/api/v1/trains", params={"search": "mumbai", "limit": 1})
+    assert response.status_code == 200
+    assert [train["number"] for train in response.json()] == ["12951"]
