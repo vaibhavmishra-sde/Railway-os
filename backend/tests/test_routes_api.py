@@ -54,3 +54,8 @@ def test_route_list_supports_search_and_pagination(client) -> None:
     response = client.get("/api/v1/routes", params={"search": "desert", "limit": 1})
     assert response.status_code == 200
     assert [route["code"] for route in response.json()] == ["JP-ADI"]
+
+
+def test_route_list_rejects_invalid_pagination(client) -> None:
+    assert client.get("/api/v1/routes", params={"limit": 0}).status_code == 422
+    assert client.get("/api/v1/routes", params={"limit": 101}).status_code == 422
