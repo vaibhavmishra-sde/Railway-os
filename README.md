@@ -132,6 +132,7 @@ bash scripts/check-backend.sh
 - [Day 15 ERD Design Notes](docs/day-015-erd-design.md)
 - [Day 24 Synthetic Timetable Seed](docs/day-024-seeding.md)
 - [Day 27 Timetable API Completion](docs/day-027-completion.md)
+- [Day 27 Timetable API Examples](docs/day-027-api-examples.md)
 
 ## Tech Stack
 
