@@ -92,6 +92,12 @@ def test_services_reject_invalid_pagination(client) -> None:
         assert response.status_code == 422
 
 
+def test_services_require_service_date(client) -> None:
+    response = client.get("/api/v1/services")
+
+    assert response.status_code == 422
+
+
 def test_service_rejects_duplicate_train_date(client) -> None:
     train = client.post(
         "/api/v1/trains", json={"number": "12301", "name": "Rajdhani"}
