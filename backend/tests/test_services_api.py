@@ -36,6 +36,12 @@ def test_create_service_add_stop_and_filter_by_date(client) -> None:
     )
     assert stop_response.status_code == 201
 
+    second_stop = client.post(
+        f"/api/v1/services/{service_id}/stops",
+        json={"station_id": station["id"], "stop_sequence": 2, "scheduled_arrival": "18:00:00"},
+    )
+    assert second_stop.status_code == 201
+
     list_response = client.get("/api/v1/services?service_date=2026-10-01")
     assert list_response.status_code == 200
     assert [service["id"] for service in list_response.json()] == [service_id]
@@ -46,7 +52,7 @@ def test_create_service_add_stop_and_filter_by_date(client) -> None:
 
     detail_response = client.get(f"/api/v1/services/{service_id}")
     assert detail_response.status_code == 200
-    assert detail_response.json()["stops"][0]["station_id"] == station["id"]
+    assert [stop["stop_sequence"] for stop in detail_response.json()["stops"]] == [1, 2]
 
 
 def test_service_detail_returns_404_for_unknown_service(client) -> None:
