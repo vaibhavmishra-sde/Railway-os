@@ -161,14 +161,14 @@ class TrainServiceCreate(BaseModel):
 
     train_id: str
     route_id: str
-    service_date: date
+    service_date: date = Field(examples=["2026-10-01"])
 
 
 class ServiceStopCreate(BaseModel):
     """A planned station call on a dated service."""
 
     station_id: str
-    stop_sequence: int = Field(ge=1)
+    stop_sequence: int = Field(ge=1, examples=[1])
     scheduled_arrival: time | None = None
     scheduled_departure: time | None = None
     platform_number: str | None = Field(default=None, max_length=10)
