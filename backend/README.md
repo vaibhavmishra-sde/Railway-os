@@ -110,3 +110,8 @@ checks before each commit:
 - [x] Health endpoint and API contract tests (Day 6)
 - [x] Ruff formatting/linting and pre-commit checks (Day 6)
 - [ ] CI (Day 7)
+# Timetable service API
+
+The versioned service endpoints expose dated timetable data. Lists require a
+`service_date` query parameter and accept bounded `offset`/`limit` pagination.
+Service detail responses include stops ordered by `stop_sequence`.
