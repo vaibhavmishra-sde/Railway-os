@@ -9,6 +9,7 @@ from app.api.v1.schemas import (
     ServiceStopCreate,
     ServiceStopResponse,
     TrainServiceCreate,
+    TrainServiceDetailResponse,
     TrainServiceResponse,
 )
 from app.db.session import get_db
@@ -51,6 +52,20 @@ def create_service_endpoint(
         ) from exc
 
 
+@router.get("/{service_id}", response_model=TrainServiceDetailResponse)
+def get_service_detail(
+    service_id: str,
+    db: Session = Depends(get_db),  # noqa: B008
+) -> TrainServiceDetailResponse:
+    """Return one dated service and its ordered timetable."""
+    service = get(db, service_id)
+    if service is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Service not found"
+        )
+    response = TrainServiceDetailResponse.model_validate(service, from_attributes=True)
+    response.stops = list_stops(db, service_id)
+    return response
 @router.get("/{service_id}/stops", response_model=list[ServiceStopResponse])
 def get_service_stops(
     service_id: str,

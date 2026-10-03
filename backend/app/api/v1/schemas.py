@@ -188,6 +188,12 @@ class TrainServiceResponse(BaseModel):
     updated_at: datetime
 
 
+class TrainServiceDetailResponse(TrainServiceResponse):
+    """A service together with its ordered timetable stops."""
+
+    stops: list["ServiceStopResponse"] = Field(default_factory=list)
+
+
 class ServiceStopResponse(BaseModel):
     """Public representation of one timetable stop."""
 

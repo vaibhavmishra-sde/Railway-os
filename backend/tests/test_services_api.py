@@ -44,6 +44,16 @@ def test_create_service_add_stop_and_filter_by_date(client) -> None:
     assert stops_response.status_code == 200
     assert stops_response.json()[0]["platform_number"] == "1"
 
+    detail_response = client.get(f"/api/v1/services/{service_id}")
+    assert detail_response.status_code == 200
+    assert detail_response.json()["stops"][0]["station_id"] == station["id"]
+
+
+def test_service_detail_returns_404_for_unknown_service(client) -> None:
+    response = client.get("/api/v1/services/not-a-service")
+
+    assert response.status_code == 404
+
 
 def test_service_rejects_duplicate_train_date(client) -> None:
     train = client.post(

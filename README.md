@@ -65,6 +65,12 @@ are available at `/api/v1/trains/{train_id}`.
 Use `/api/v1/routes/{route_id}` for route details and
 `/api/v1/routes/{route_id}/stops` for ordered stops.
 
+## Timetable API
+
+`GET /api/v1/services?service_date=YYYY-MM-DD` lists dated train services.
+`GET /api/v1/services/{service_id}` returns one service with its ordered
+timetable stops. Use `/stops` when only the stop collection is required.
+
 ## Quick Start
 
 ```bash
