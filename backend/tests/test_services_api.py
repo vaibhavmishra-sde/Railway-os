@@ -86,6 +86,12 @@ def test_service_rejects_duplicate_stop_sequence(client) -> None:
     assert client.post(f"/api/v1/services/{service['id']}/stops", json=payload).status_code == 409
 
 
+def test_services_reject_invalid_pagination(client) -> None:
+    for query in ("offset=-1", "limit=0", "limit=101"):
+        response = client.get(f"/api/v1/services?service_date=2026-10-01&{query}")
+        assert response.status_code == 422
+
+
 def test_service_rejects_duplicate_train_date(client) -> None:
     train = client.post(
         "/api/v1/trains", json={"number": "12301", "name": "Rajdhani"}
