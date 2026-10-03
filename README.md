@@ -30,6 +30,7 @@ A full-stack railway operations platform built as a portfolio project.
 | 24 | Extend seed data for trains, coaches, seats, services, and stops | Done |
 | 25 | Add station search, pagination, and detail API | Done |
 | 26 | Add train and route detail, search, and pagination APIs | Done |
+| 27 | Add timetable/service detail APIs | Done |
 
 ## Backend API
 
