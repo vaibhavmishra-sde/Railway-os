@@ -23,14 +23,21 @@ def get_by_train_and_date(
     )
 
 
-def list_by_date(session: Session, service_date: date) -> list[TrainService]:
-    return list(
-        session.scalars(
-            select(TrainService)
-            .where(TrainService.service_date == service_date)
-            .order_by(TrainService.train_id)
-        )
+def list_by_date(
+    session: Session,
+    service_date: date,
+    *,
+    offset: int = 0,
+    limit: int = 50,
+) -> list[TrainService]:
+    statement = (
+        select(TrainService)
+        .where(TrainService.service_date == service_date)
+        .order_by(TrainService.train_id)
+        .offset(offset)
+        .limit(limit)
     )
+    return list(session.scalars(statement))
 
 
 def list_stops(session: Session, service_id: str) -> list[ServiceStop]:

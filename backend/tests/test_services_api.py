@@ -55,6 +55,26 @@ def test_service_detail_returns_404_for_unknown_service(client) -> None:
     assert response.status_code == 404
 
 
+def test_services_list_supports_bounded_pagination(client) -> None:
+    train = client.post(
+        "/api/v1/trains", json={"number": "12301", "name": "Rajdhani"}
+    ).json()
+    route = client.post(
+        "/api/v1/routes",
+        json={"code": "NDLS-BCT", "name": "Capital Express", "total_distance_km": 1384},
+    ).json()
+    for service_date in ("2026-10-01", "2026-10-02"):
+        assert client.post(
+            "/api/v1/services",
+            json={"train_id": train["id"], "route_id": route["id"], "service_date": service_date},
+        ).status_code == 201
+
+    response = client.get("/api/v1/services?service_date=2026-10-01&offset=1&limit=1")
+
+    assert response.status_code == 200
+    assert response.json() == []
+
+
 def test_service_rejects_duplicate_train_date(client) -> None:
     train = client.post(
         "/api/v1/trains", json={"number": "12301", "name": "Rajdhani"}

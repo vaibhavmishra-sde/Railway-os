@@ -27,10 +27,12 @@ router = APIRouter(prefix="/services", tags=["services"])
 @router.get("", response_model=list[TrainServiceResponse])
 def list_services(
     service_date: date = Query(...),  # noqa: B008
+    offset: int = Query(0, ge=0),  # noqa: B008
+    limit: int = Query(50, ge=1, le=100),  # noqa: B008
     db: Session = Depends(get_db),  # noqa: B008
 ) -> list[TrainServiceResponse]:
     """List the scheduled train services for one calendar date."""
-    return list_by_date(db, service_date)
+    return list_by_date(db, service_date, offset=offset, limit=limit)
 
 
 @router.post(
