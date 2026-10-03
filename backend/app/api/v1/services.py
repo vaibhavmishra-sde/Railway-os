@@ -69,6 +69,8 @@ def get_service_detail(
     response = TrainServiceDetailResponse.model_validate(service, from_attributes=True)
     response.stops = list_stops(db, service_id)
     return response
+
+
 @router.get("/{service_id}/stops", response_model=list[ServiceStopResponse])
 def get_service_stops(
     service_id: str,

@@ -27,7 +27,9 @@ def get_station(station_id: str, db: Session = Depends(get_db)) -> StationRespon
     """Return one active station or a useful 404 response."""
     station = get_active_by_id(db, station_id)
     if station is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Station not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Station not found"
+        )
     return station
 
 

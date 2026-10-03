@@ -44,9 +44,12 @@ def add_stop(
 ) -> ServiceStop:
     if session.get(Station, payload.station_id) is None:
         raise ServiceReferenceNotFoundError("Station not found")
-    if service_repository.get_stop_by_sequence(
-        session, service.id, payload.stop_sequence
-    ) is not None:
+    if (
+        service_repository.get_stop_by_sequence(
+            session, service.id, payload.stop_sequence
+        )
+        is not None
+    ):
         raise ServiceStopAlreadyExistsError(
             "This service already has a stop at that sequence"
         )

@@ -20,8 +20,12 @@ def list_active(
     statement = select(Route).where(Route.is_active)
     if search:
         pattern = f"%{search.strip()}%"
-        statement = statement.where(Route.code.ilike(pattern) | Route.name.ilike(pattern))
-    return list(session.scalars(statement.order_by(Route.code).offset(offset).limit(limit)))
+        statement = statement.where(
+            Route.code.ilike(pattern) | Route.name.ilike(pattern)
+        )
+    return list(
+        session.scalars(statement.order_by(Route.code).offset(offset).limit(limit))
+    )
 
 
 def list_stops(session: Session, route_id: str) -> list[RouteStop]:

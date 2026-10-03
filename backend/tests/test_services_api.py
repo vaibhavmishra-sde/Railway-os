@@ -38,7 +38,11 @@ def test_create_service_add_stop_and_filter_by_date(client) -> None:
 
     second_stop = client.post(
         f"/api/v1/services/{service_id}/stops",
-        json={"station_id": station["id"], "stop_sequence": 2, "scheduled_arrival": "18:00:00"},
+        json={
+            "station_id": station["id"],
+            "stop_sequence": 2,
+            "scheduled_arrival": "18:00:00",
+        },
     )
     assert second_stop.status_code == 201
 
@@ -70,10 +74,17 @@ def test_services_list_supports_bounded_pagination(client) -> None:
         json={"code": "NDLS-BCT", "name": "Capital Express", "total_distance_km": 1384},
     ).json()
     for service_date in ("2026-10-01", "2026-10-02"):
-        assert client.post(
-            "/api/v1/services",
-            json={"train_id": train["id"], "route_id": route["id"], "service_date": service_date},
-        ).status_code == 201
+        assert (
+            client.post(
+                "/api/v1/services",
+                json={
+                    "train_id": train["id"],
+                    "route_id": route["id"],
+                    "service_date": service_date,
+                },
+            ).status_code
+            == 201
+        )
 
     response = client.get("/api/v1/services?service_date=2026-10-01&offset=1&limit=1")
 
@@ -82,14 +93,39 @@ def test_services_list_supports_bounded_pagination(client) -> None:
 
 
 def test_service_rejects_duplicate_stop_sequence(client) -> None:
-    train = client.post("/api/v1/trains", json={"number": "12301", "name": "Rajdhani"}).json()
-    route = client.post("/api/v1/routes", json={"code": "NDLS-BCT", "name": "Capital Express", "total_distance_km": 1384}).json()
-    station = client.post("/api/v1/stations", json={"code": "NDLS", "name": "New Delhi", "city": "Delhi", "state": "Delhi"}).json()
-    service = client.post("/api/v1/services", json={"train_id": train["id"], "route_id": route["id"], "service_date": "2026-10-01"}).json()
-    payload = {"station_id": station["id"], "stop_sequence": 1, "scheduled_departure": "08:00:00"}
+    train = client.post(
+        "/api/v1/trains", json={"number": "12301", "name": "Rajdhani"}
+    ).json()
+    route = client.post(
+        "/api/v1/routes",
+        json={"code": "NDLS-BCT", "name": "Capital Express", "total_distance_km": 1384},
+    ).json()
+    station = client.post(
+        "/api/v1/stations",
+        json={"code": "NDLS", "name": "New Delhi", "city": "Delhi", "state": "Delhi"},
+    ).json()
+    service = client.post(
+        "/api/v1/services",
+        json={
+            "train_id": train["id"],
+            "route_id": route["id"],
+            "service_date": "2026-10-01",
+        },
+    ).json()
+    payload = {
+        "station_id": station["id"],
+        "stop_sequence": 1,
+        "scheduled_departure": "08:00:00",
+    }
 
-    assert client.post(f"/api/v1/services/{service['id']}/stops", json=payload).status_code == 201
-    assert client.post(f"/api/v1/services/{service['id']}/stops", json=payload).status_code == 409
+    assert (
+        client.post(f"/api/v1/services/{service['id']}/stops", json=payload).status_code
+        == 201
+    )
+    assert (
+        client.post(f"/api/v1/services/{service['id']}/stops", json=payload).status_code
+        == 409
+    )
 
 
 def test_services_reject_invalid_pagination(client) -> None:
