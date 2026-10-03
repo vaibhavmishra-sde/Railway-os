@@ -50,6 +50,17 @@ def list_stops(session: Session, service_id: str) -> list[ServiceStop]:
     )
 
 
+def get_stop_by_sequence(
+    session: Session, service_id: str, stop_sequence: int
+) -> ServiceStop | None:
+    return session.scalar(
+        select(ServiceStop).where(
+            ServiceStop.service_id == service_id,
+            ServiceStop.stop_sequence == stop_sequence,
+        )
+    )
+
+
 def create(session: Session, **service_data: object) -> TrainService:
     service = TrainService(**service_data)
     session.add(service)

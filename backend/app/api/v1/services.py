@@ -16,6 +16,7 @@ from app.db.session import get_db
 from app.repositories.service import get, list_by_date, list_stops
 from app.services.service import (
     ServiceReferenceNotFoundError,
+    ServiceStopAlreadyExistsError,
     TrainServiceAlreadyExistsError,
     add_stop,
     create_service,
@@ -97,6 +98,10 @@ def add_service_stop_endpoint(
         )
     try:
         return add_stop(db, service, payload)
+    except ServiceStopAlreadyExistsError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT, detail=str(exc)
+        ) from exc
     except ServiceReferenceNotFoundError as exc:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)

@@ -18,6 +18,10 @@ class ServiceReferenceNotFoundError(ValueError):
     """Raised when a service references a train, route, or station that is absent."""
 
 
+class ServiceStopAlreadyExistsError(ValueError):
+    """Raised when a timetable position is already occupied."""
+
+
 def create_service(session: Session, payload: TrainServiceCreate) -> TrainService:
     if session.get(Train, payload.train_id) is None:
         raise ServiceReferenceNotFoundError("Train not found")
@@ -40,6 +44,12 @@ def add_stop(
 ) -> ServiceStop:
     if session.get(Station, payload.station_id) is None:
         raise ServiceReferenceNotFoundError("Station not found")
+    if service_repository.get_stop_by_sequence(
+        session, service.id, payload.stop_sequence
+    ) is not None:
+        raise ServiceStopAlreadyExistsError(
+            "This service already has a stop at that sequence"
+        )
     return service_repository.create_stop(
         session, service_id=service.id, **payload.model_dump()
     )
