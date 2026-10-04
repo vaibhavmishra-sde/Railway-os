@@ -2,7 +2,7 @@
 
 A full-stack railway operations platform built as a portfolio project.
 
-**Current milestone:** Day 26 complete — station, train, and route discovery APIs are available.
+**Current milestone:** Day 28 complete — Month 1 review passed and the backend is ready for the authentication milestone.
 
 ## Progress
 
@@ -31,6 +31,12 @@ A full-stack railway operations platform built as a portfolio project.
 | 25 | Add station search, pagination, and detail API | Done |
 | 26 | Add train and route detail, search, and pagination APIs | Done |
 | 27 | Add timetable/service detail APIs | Done |
+| 28 | Review clean clone, migration, seed, API docs, and CI | Done |
+
+The Day 28 verification record is in [docs/day-028-completion.md](docs/day-028-completion.md).
+
+The Day 29 identity and access contract is documented in
+[docs/day-029-auth-design.md](docs/day-029-auth-design.md).
 
 ## Backend API
 
