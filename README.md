@@ -35,6 +35,9 @@ A full-stack railway operations platform built as a portfolio project.
 
 The Day 28 verification record is in [docs/day-028-completion.md](docs/day-028-completion.md).
 
+The Day 29 identity and access contract is documented in
+[docs/day-029-auth-design.md](docs/day-029-auth-design.md).
+
 ## Backend API
 
 Start the application from the `backend` directory:
