@@ -37,6 +37,8 @@ The Day 28 verification record is in [docs/day-028-completion.md](docs/day-028-c
 
 The Day 29 identity and access contract is documented in
 [docs/day-029-auth-design.md](docs/day-029-auth-design.md).
+The Day 30 implementation plan is documented in
+[docs/day-030-auth-model-plan.md](docs/day-030-auth-model-plan.md).
 
 ## Backend API
 
