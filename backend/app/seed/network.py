@@ -6,6 +6,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.data.network import ROUTES, SERVICES, STATIONS, validate_catalog
+from app.models.identity import Role
 from app.models.route import Route, RouteStop
 from app.models.seat import BerthType, Seat
 from app.models.service import ServiceStop, TrainService
@@ -24,6 +25,29 @@ COACH_LAYOUT = (
     ("B1", SeatClass.SECOND_AC, 6),
     ("S1", SeatClass.SLEEPER, 8),
 )
+
+ROLE_CATALOG = (
+    ("passenger", "Passenger"),
+    ("station_staff", "Station staff"),
+    ("operations_manager", "Operations manager"),
+    ("admin", "Administrator"),
+)
+
+
+def seed_roles(session: Session) -> dict[str, Role]:
+    """Create the approved authorization roles idempotently."""
+    keys = [key for key, _ in ROLE_CATALOG]
+    roles = {
+        role.key: role
+        for role in session.scalars(select(Role).where(Role.key.in_(keys)))
+    }
+    for key, name in ROLE_CATALOG:
+        if key not in roles:
+            role = Role(key=key, name=name)
+            session.add(role)
+            roles[key] = role
+    session.flush()
+    return roles
 
 
 def seed_stations(session: Session) -> dict[str, Station]:
