@@ -2,6 +2,7 @@ from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
 
 from app.db.session import Base
+from app.models.identity import Role
 from app.models.route import Route, RouteStop
 from app.models.seat import Seat
 from app.models.service import ServiceStop, TrainService
@@ -11,12 +12,25 @@ from app.seed.network import (
     seed_coaches,
     seed_full_network,
     seed_network,
+    seed_roles,
     seed_seats,
     seed_service_stops,
     seed_services,
     seed_trains,
     validate_service_stops,
 )
+
+
+def test_role_seed_is_idempotent(db_session):
+    first = seed_roles(db_session)
+    db_session.commit()
+
+    second = seed_roles(db_session)
+    db_session.commit()
+
+    assert len(first) == 4
+    assert len(second) == 4
+    assert db_session.query(Role).count() == 4
 
 
 def test_network_seed_is_idempotent():
@@ -95,6 +109,7 @@ def test_full_seed_can_be_repeated_without_new_rows():
         first = seed_full_network(session)
         second = seed_full_network(session)
         assert first == {
+            "roles": 4,
             "stations": 12,
             "routes": 3,
             "trains": 5,
