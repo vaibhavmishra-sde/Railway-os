@@ -35,6 +35,13 @@ def test_station_search_and_pagination(client) -> None:
     assert [station["code"] for station in response.json()] == ["BCT"]
 
 
+def test_station_search_ignores_whitespace_only_input(client) -> None:
+    response = client.get("/api/v1/stations", params={"search": "   "})
+
+    assert response.status_code == 200
+    assert response.json() == []
+
+
 def test_station_detail_and_missing_station(client) -> None:
     created = client.post(
         "/api/v1/stations",

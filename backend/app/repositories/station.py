@@ -28,7 +28,14 @@ def list_active(
     """Return active stations ordered for predictable public responses."""
     statement = select(Station).where(Station.is_active)
     if search:
-        pattern = f"%{search.strip()}%"
+        normalized_search = search.strip()
+        if not normalized_search:
+            return list(
+                session.scalars(
+                    statement.order_by(Station.code).offset(offset).limit(limit)
+                )
+            )
+        pattern = f"%{normalized_search}%"
         statement = statement.where(
             Station.code.ilike(pattern)
             | Station.name.ilike(pattern)
