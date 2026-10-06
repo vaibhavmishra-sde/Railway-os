@@ -27,6 +27,65 @@ checks.
 - Idempotent seed operations for repeatable demonstrations.
 - Generated OpenAPI documentation through FastAPI.
 
+## Platform overview
+
+RailwayOS turns railway network information into a dependable operational
+workspace. Instead of treating a railway as a collection of disconnected
+tables, the platform connects physical assets, network topology, and dated
+operations into one consistent model.
+
+### Core value pillars
+
+| Capability | What it means |
+|---|---|
+| Network visibility | Stations, routes, trains, coaches, seats, and service stops are represented together. |
+| Operational correctness | Constraints, normalized identifiers, bounded queries, and transactional persistence protect data quality. |
+| Reproducible environments | Migrations and deterministic seed data make local demos and tests repeatable. |
+| Extensible foundation | Identity, roles, and audit events provide a base for protected staff and passenger workflows. |
+| Developer confidence | API contracts, isolated database fixtures, CI, linting, and 70+ automated tests support change safely. |
+
+## The three operational perspectives
+
+### Passenger and public information
+
+Public-facing clients can discover stations, routes, trains, and dated services
+through predictable APIs. Search, pagination, ordered stops, and clear not-found
+responses make the network data suitable for a future journey-search experience.
+
+### Operations staff
+
+Operations workflows are built around the relationship between a train, its
+route, its service date, and its timetable stops. The identity and role model
+is designed to support protected operational actions and an auditable history
+as those workflows are added.
+
+### Platform administrators
+
+Administrators receive a maintainable foundation for managing users, roles,
+synthetic network data, migrations, and service health. Repeatable seeding and
+database-readiness checks make the system easier to operate in development and
+deployment environments.
+
+## End-to-end operating flow
+
+```text
+Network catalog
+      ↓
+Stations and routes
+      ↓
+Trains, coaches, and seats
+      ↓
+Dated train services
+      ↓
+Ordered timetable stops
+      ↓
+Passenger, operations, and analytics workflows
+```
+
+The same identifiers and relationships are used throughout the flow. A route
+contains ordered stations, a dated service runs a train on that route, and
+service stops describe the timetable exposed to API consumers.
+
 The current implementation establishes the network and identity foundation.
 Passenger booking, live tracking, notifications, analytics, and operations
 dashboards are separate domain areas intended to build on this foundation.
