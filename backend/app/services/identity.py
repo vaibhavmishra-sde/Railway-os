@@ -28,6 +28,10 @@ def create_user(session: Session, *, email: str, password: str) -> User:
 def authenticate_user(session: Session, *, email: str, password: str) -> User | None:
     """Return an active user for valid credentials, otherwise ``None``."""
     user = session.scalar(select(User).where(User.email == email.strip().lower()))
-    if user is None or not user.is_active or not verify_password(password, user.password_hash):
+    if (
+        user is None
+        or not user.is_active
+        or not verify_password(password, user.password_hash)
+    ):
         return None
     return user

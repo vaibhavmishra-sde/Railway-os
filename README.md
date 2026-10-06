@@ -1,123 +1,266 @@
 # RailwayOS
 
-A full-stack railway operations platform built as a portfolio project.
+### A modular railway operations platform for schedules, network data, and operational workflows
 
-**Current milestone:** Day 28 complete — Month 1 review passed and the backend is ready for the authentication milestone.
+RailwayOS is an API-first railway operations platform built with FastAPI. It
+models stations, trains, coaches, seats, routes, dated services, timetable
+stops, users, roles, and audit events using deterministic synthetic data.
 
-## Progress
+The project focuses on maintainable engineering: clear domain boundaries,
+database migrations, repeatable seed data, automated tests, and CI quality
+checks.
 
-| Day | Task | Status |
-|-----|------|--------|
-| 1 | Read roadmap; create GitHub issues/milestones; verify prerequisites | Done |
-| 2 | Copy `.env.example` to `.env`; set dev passwords; validate Docker config | Done |
-| 3 | Start PostgreSQL + Redis via Docker; check health, ports, volumes | Done |
-| 4 | Create backend Python virtual environment and dependency manifest | Done |
-| 5 | Scaffold FastAPI app and local dev server | Done |
-| 6 | Add backend tests, formatter, linter, and pre-commit checks | Done |
-| 7 | Add GitHub Actions workflow for backend checks and write local setup instructions | Done |
-| 8 | Create application settings with `pydantic-settings` and environment validation | Done |
-| 9 | Add API prefix/versioning, router structure, and OpenAPI metadata | Done |
-| 10 | Add request IDs, structured logging, and a global error response format | Done |
-| 11 | Configure SQLAlchemy engine/session and database connectivity check | Done |
-| 12 | Initialize Alembic and create a blank migration workflow | Done |
-| 13 | Add database test fixture strategy and separate test database configuration | Done |
-| 14 | Review Week 2: refactor imports, document architecture decisions, and run full checks | Done |
-| 15 | Design ERD for stations, trains, routes, services, stops, coaches, and seats; commit model stubs | Done |
-| 16 | Implement Station model, migration, schemas, validation, and API | Done |
-| 17 | Implement Train and Coach models, migrations, validation, and API | Done |
-| 22 | Define deterministic synthetic network catalog | Done |
-| 23 | Build idempotent station and route seed command | Done |
-| 24 | Extend seed data for trains, coaches, seats, services, and stops | Done |
-| 25 | Add station search, pagination, and detail API | Done |
-| 26 | Add train and route detail, search, and pagination APIs | Done |
-| 27 | Add timetable/service detail APIs | Done |
-| 28 | Review clean clone, migration, seed, API docs, and CI | Done |
+> RailwayOS is a simulation and portfolio project. It is not connected to an
+> official railway operator and must not be used for safety-critical dispatch
+> or real passenger transactions.
 
-The Day 28 verification record is in [docs/day-028-completion.md](docs/day-028-completion.md).
+## What it provides
 
-The Day 29 identity and access contract is documented in
-[docs/day-029-auth-design.md](docs/day-029-auth-design.md).
-The Day 30 implementation plan is documented in
-[docs/day-030-auth-model-plan.md](docs/day-030-auth-model-plan.md).
+- Synthetic railway network data for stations, routes, trains, coaches, seats,
+  and timetables.
+- REST APIs for creating and browsing network resources.
+- Search and bounded pagination with deterministic ordering.
+- Dated train services with ordered timetable stops.
+- Liveness and database-readiness probes.
+- Identity models for users, roles, assignments, and audit events.
+- Password hashing and credential verification services.
+- Idempotent seed operations for repeatable demonstrations.
+- Generated OpenAPI documentation through FastAPI.
 
-## Backend API
+## Platform overview
 
-Start the application from the `backend` directory:
+RailwayOS turns railway network information into a dependable operational
+workspace. Instead of treating a railway as a collection of disconnected
+tables, the platform connects physical assets, network topology, and dated
+operations into one consistent model.
 
-```powershell
-.\.venv\Scripts\python -m uvicorn app.main:app --reload
+### Core value pillars
+
+| Capability | What it means |
+|---|---|
+| Network visibility | Stations, routes, trains, coaches, seats, and service stops are represented together. |
+| Operational correctness | Constraints, normalized identifiers, bounded queries, and transactional persistence protect data quality. |
+| Reproducible environments | Migrations and deterministic seed data make local demos and tests repeatable. |
+| Extensible foundation | Identity, roles, and audit events provide a base for protected staff and passenger workflows. |
+| Developer confidence | API contracts, isolated database fixtures, CI, linting, and 70+ automated tests support change safely. |
+
+## The three operational perspectives
+
+### Passenger and public information
+
+Public-facing clients can discover stations, routes, trains, and dated services
+through predictable APIs. Search, pagination, ordered stops, and clear not-found
+responses make the network data suitable for a future journey-search experience.
+
+### Operations staff
+
+Operations workflows are built around the relationship between a train, its
+route, its service date, and its timetable stops. The identity and role model
+is designed to support protected operational actions and an auditable history
+as those workflows are added.
+
+### Platform administrators
+
+Administrators receive a maintainable foundation for managing users, roles,
+synthetic network data, migrations, and service health. Repeatable seeding and
+database-readiness checks make the system easier to operate in development and
+deployment environments.
+
+## End-to-end operating flow
+
+```text
+Network catalog
+      ↓
+Stations and routes
+      ↓
+Trains, coaches, and seats
+      ↓
+Dated train services
+      ↓
+Ordered timetable stops
+      ↓
+Passenger, operations, and analytics workflows
 ```
 
-The liveness endpoint is available at `http://127.0.0.1:8000/health` and returns
-the service name, version, and an `ok` status. Versioned clients may use
-`/api/v1/health`.
+The same identifiers and relationships are used throughout the flow. A route
+contains ordered stations, a dated service runs a train on that route, and
+service stops describe the timetable exposed to API consumers.
 
-## Stations API
+The current implementation establishes the network and identity foundation.
+Passenger booking, live tracking, notifications, analytics, and operations
+dashboards are separate domain areas intended to build on this foundation.
 
-`GET /api/v1/stations` lists active stations in station-code order. It accepts
-optional `search`, `offset`, and `limit` query parameters. `GET
-/api/v1/stations/{station_id}` returns one active station. `POST
-/api/v1/stations` creates a station for the synthetic network; station codes are
-trimmed, normalized to uppercase, and must be unique.
+## Architecture
 
-## Trains API
+RailwayOS uses a modular monolith: one deployable FastAPI application with
+explicit internal layers. This keeps local development and transactions simple
+while preserving boundaries that can later be extracted into services.
 
-`POST /api/v1/trains` creates a trainset with a unique numeric train number.
-Use `POST /api/v1/trains/{train_id}/coaches` to add a coach and `GET
-/api/v1/trains/{train_id}/coaches` to retrieve its ordered coach list.
-`GET /api/v1/trains` supports `search`, `offset`, and `limit`; individual trains
-are available at `/api/v1/trains/{train_id}`.
+```mermaid
+flowchart TD
+    Client[Web client or API consumer] --> API[FastAPI application]
+    API --> Routers[Versioned API routers]
+    Routers --> Services[Domain services]
+    Services --> Repositories[Repositories]
+    Repositories --> DB[(PostgreSQL)]
+    Migrations[Alembic migrations] --> DB
+    Seed[Deterministic seed data] --> Services
+    Services -. future cache and messaging .-> Redis[(Redis)]
+```
 
-## Routes API
+### Request flow
 
-`GET /api/v1/routes` supports the same bounded search and pagination parameters.
-Use `/api/v1/routes/{route_id}` for route details and
-`/api/v1/routes/{route_id}/stops` for ordered stops.
+1. FastAPI receives a request and selects a versioned router.
+2. Pydantic schemas validate and normalize input.
+3. Domain services apply business rules such as duplicate detection.
+4. Repositories execute SQLAlchemy queries.
+5. Typed response models return predictable API data.
 
-## Timetable API
+### Architecture principles
 
-`GET /api/v1/services?service_date=YYYY-MM-DD` lists dated train services.
-`GET /api/v1/services/{service_id}` returns one service with its ordered
-timetable stops. Use `/stops` when only the stop collection is required.
+| Principle | Implementation |
+|---|---|
+| Modular monolith | Domain modules share one process and transaction boundary. |
+| API-first design | Typed FastAPI routes generate OpenAPI documentation. |
+| Database integrity | SQLAlchemy models, constraints, foreign keys, and Alembic migrations. |
+| Synthetic data only | Seed catalogs are deterministic and clearly separated from real data. |
+| Testable boundaries | API, schema, service, repository, and seed behaviour are tested. |
+| Operational readiness | Liveness and database-readiness probes support deployments. |
 
-## Quick Start
+## Core domain model
+
+```text
+Station ──< RouteStop >── Route
+   │                         │
+   └────── ServiceStop >── TrainService ── Train ──< Coach ──< Seat
+
+User ──< UserRole >── Role
+  │
+  └──< AuditEvent
+```
+
+- **Station** — active railway station with a unique normalized code.
+- **Route** — ordered network path between stations.
+- **RouteStop** — station position and distance along a route.
+- **Train** — trainset identified by a unique numeric number.
+- **Coach and Seat** — train capacity and berth-level inventory entities.
+- **TrainService** — dated operation of a train over a route.
+- **ServiceStop** — scheduled arrival, departure, and platform information.
+- **User, Role, and AuditEvent** — identity, authorization, and security history.
+
+## Repository structure
+
+```text
+railway-os-platform/
+├── backend/
+│   ├── app/api/v1/       # Versioned endpoints and schemas
+│   ├── app/core/         # Configuration, security, and shared utilities
+│   ├── app/db/           # SQLAlchemy engine and sessions
+│   ├── app/models/       # ORM entities and relationships
+│   ├── app/repositories/ # Database access functions
+│   ├── app/services/     # Domain rules and use cases
+│   ├── app/seed/         # Synthetic network seed logic
+│   ├── migrations/       # Alembic migration history
+│   └── tests/            # Pytest test suite
+├── docs/                 # Architecture, setup, ERD, and API notes
+├── scripts/              # Setup and quality-check helpers
+├── database/             # Database support files
+├── docker-compose.yml    # Local PostgreSQL and Redis
+└── .github/workflows/    # Continuous integration
+```
+
+## API surface
+
+The versioned API is served under `/api/v1`. Interactive documentation is
+available at `/docs` while the server is running.
+
+| Resource | Endpoints | Purpose |
+|---|---|---|
+| Health | `GET /health`, `GET /api/v1/health`, `GET /api/v1/ready` | Liveness and database readiness |
+| Stations | `GET/POST /api/v1/stations`, `GET /api/v1/stations/{id}` | Browse and create stations |
+| Trains | `GET/POST /api/v1/trains`, `GET /api/v1/trains/{id}` | Browse and create trains |
+| Coaches | `GET/POST /api/v1/trains/{id}/coaches` | Manage train coaches |
+| Routes | `GET/POST /api/v1/routes`, `GET /api/v1/routes/{id}` | Browse and create routes |
+| Route stops | `GET/POST /api/v1/routes/{id}/stops` | Manage ordered route stations |
+| Services | `GET/POST /api/v1/services`, `GET /api/v1/services/{id}` | Browse dated services |
+
+List endpoints support bounded `offset` and `limit` parameters. Searchable
+resources normalize input and return deterministic ordering.
+
+## Technology stack
+
+| Layer | Technology |
+|---|---|
+| API | Python 3.11+, FastAPI, Uvicorn |
+| Validation | Pydantic v2 and pydantic-settings |
+| Persistence | SQLAlchemy 2, PostgreSQL, Alembic |
+| Cache and messaging | Redis |
+| Authentication foundation | Passlib password hashing |
+| Testing | Pytest, HTTPX, SQLite-isolated fixtures |
+| Quality | Ruff, MyPy configuration, pre-commit, GitHub Actions |
+| Infrastructure | Docker Compose |
+
+## Local setup
+
+### Prerequisites
+
+- Python 3.11 or newer
+- Docker Desktop with Compose
+- Git
+
+### Configure and start infrastructure
 
 ```bash
-# 1. Clone the repo
-git clone <repo-url>
+git clone https://github.com/vaibhavmishra-sde/Railway-os.git
 cd railway-os-platform
-
-# 2. Create your local .env
 cp .env.example .env
-# Edit .env with your preferred dev passwords
-
-# 3. Validate Docker config
 docker compose config
-
-# 4. Start infrastructure
 docker compose up -d
-docker compose ps
 ```
 
-## Backend Setup
+On Windows PowerShell, use `Copy-Item .env.example .env` instead of `cp`.
+Update `.env` with local development credentials and never commit that file.
+
+### Install and run the backend
 
 Windows PowerShell:
 
 ```powershell
 .\scripts\setup-backend.ps1
+Set-Location backend
+alembic upgrade head
+python -m uvicorn app.main:app --reload
 ```
 
 macOS, Linux, or Git Bash:
 
 ```bash
 bash scripts/setup-backend.sh
+cd backend
+alembic upgrade head
+python -m uvicorn app.main:app --reload
 ```
 
-These commands create `backend/.venv` and install the pinned backend dependencies.
+Useful URLs:
 
-## Backend Quality Checks
+- API: <http://127.0.0.1:8000>
+- Swagger UI: <http://127.0.0.1:8000/docs>
+- Liveness: <http://127.0.0.1:8000/health>
+- Readiness: <http://127.0.0.1:8000/api/v1/ready>
 
-Run formatting verification, linting, and the pytest suite from the repository root:
+## Configuration
+
+The backend reads environment variables from `.env`. The main configuration
+groups are `POSTGRES_*` for the database, `REDIS_*` for Redis, `APP_NAME` and
+`APP_VERSION` for API metadata, `API_PREFIX` for versioning, and
+`TEST_DATABASE_URL` for optional integration-test overrides.
+
+See [.env.example](.env.example) and
+[docs/environment-guide.md](docs/environment-guide.md) for the complete list.
+
+## Testing and quality
+
+Run the complete backend verification from the repository root:
 
 ```powershell
 .\scripts\check-backend.ps1
@@ -127,28 +270,40 @@ Run formatting verification, linting, and the pytest suite from the repository r
 bash scripts/check-backend.sh
 ```
 
+Or run individual checks from `backend/`:
+
+```bash
+pytest
+ruff check .
+ruff format --check .
+```
+
+The suite covers API contracts, schemas, repositories, services, migrations,
+seed idempotency, identity models, password hashing, and database-isolated
+integration behaviour. GitHub Actions runs the backend checks on Python 3.11
+and 3.12.
+
+## Security and reliability
+
+- Secrets are loaded from environment configuration and excluded from Git.
+- Passwords are stored as one-way PBKDF2-SHA256 hashes.
+- Email identifiers and station codes are normalized before persistence.
+- Database sessions are closed in `finally` blocks.
+- Constraints and foreign keys protect duplicate and orphaned records.
+- Readiness checks execute a database query before reporting the service ready.
+- Seed operations are safely repeatable.
+- All operational data in this project is synthetic or simulated.
+
 ## Documentation
 
-- [Project Roadmap](docs/project-roadmap.md)
-- [Daily Plan (Months 1-4)](docs/first-four-months-daily.md)
-- [GitHub Issues & Milestones](docs/day-001-github-issues.md)
-- [Environment Variables Guide](docs/environment-guide.md)
-- [Day 3 Infrastructure Verification](docs/day-003-infrastructure.md)
-- [Day 4 Backend Environment](docs/day-004-backend-environment.md)
-- [Architecture](docs/architecture.md)
-- [Entity Relationship Diagram](docs/erd.md)
-- [Day 15 ERD Design Notes](docs/day-015-erd-design.md)
-- [Day 24 Synthetic Timetable Seed](docs/day-024-seeding.md)
-- [Day 27 Timetable API Completion](docs/day-027-completion.md)
-- [Day 27 Timetable API Examples](docs/day-027-api-examples.md)
+- [Architecture overview](docs/architecture.md)
+- [Entity relationship notes](docs/erd.md)
+- [Local environment guide](docs/environment-guide.md)
+- [Local setup guide](docs/local-setup.md)
+- [API examples](docs/day-027-api-examples.md)
+- [Authentication design](docs/day-029-auth-design.md)
+- [Identity implementation](docs/day-030-implementation.md)
 
-## Tech Stack
+## License
 
-| Layer | Technology |
-|-------|------------|
-| Backend | FastAPI (Python) |
-| Database | PostgreSQL 15 |
-| Cache / Pub-Sub | Redis 7 |
-| Frontend | React + Vite + TypeScript |
-| Container | Docker Compose |
-| CI | GitHub Actions |
+RailwayOS is released under the [MIT License](LICENSE).
