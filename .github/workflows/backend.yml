@@ -12,6 +12,9 @@ jobs:
   test:
     name: Lint, Format, and Test
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
     env:
       POSTGRES_USER: railwayos_ci
       POSTGRES_PASSWORD: railwayos_ci_password
@@ -27,7 +30,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ matrix.python-version }}
           cache: "pip"
 
       - name: Install dependencies

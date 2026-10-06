@@ -25,3 +25,10 @@ def test_versioned_health_endpoint_returns_service_metadata(
         "service": "RailwayOS API",
         "version": "0.1.0",
     }
+
+
+def test_readiness_endpoint_checks_database(client: TestClient) -> None:
+    response = client.get("/api/v1/ready")
+
+    assert response.status_code == 200
+    assert response.json()["status"] == "ok"
