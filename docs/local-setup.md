@@ -60,3 +60,13 @@ ruff check .
 # Run formatter
 ruff format .
 ```
+
+## Service probes
+
+The API exposes two lightweight probes:
+
+- `GET /health` confirms that the process is running.
+- `GET /api/v1/ready` also executes a database connectivity check.
+
+Use the readiness endpoint for container or load-balancer checks when the
+database must be available before traffic is accepted.
