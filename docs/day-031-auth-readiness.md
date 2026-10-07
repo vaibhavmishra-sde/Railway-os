@@ -7,10 +7,10 @@ exposing credentials or coupling authentication rules to database details.
 
 ## Deliverables
 
-- [ ] Document the authentication boundary and request flow.
-- [ ] Define the password and token security checklist.
-- [ ] Add an implementation sequence for the next backend session.
-- [ ] Record verification commands for the local development environment.
+- [x] Document the authentication boundary and request flow.
+- [x] Define the password and token security checklist.
+- [x] Add an implementation sequence for the next backend session.
+- [x] Record verification commands for the local development environment.
 
 ## Definition of done
 
