@@ -9,3 +9,8 @@ Today’s task established the documentation baseline for protected APIs:
 
 Next session: implement password hashing and login-token tests against the
 existing identity model.
+
+## GitHub handoff
+
+The Day 31 documentation is ready to review on the feature branch before it is
+merged into the default branch.
