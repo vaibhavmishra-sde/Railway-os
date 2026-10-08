@@ -27,3 +27,9 @@ JWT access token without exposing password hashes or other sensitive data.
 - Passwords, password hashes, and tokens are not written to logs or responses
   other than the intended login response.
 - Focused authentication tests pass.
+
+## Acceptance criteria
+
+- Login returns a short-lived JWT.
+- Invalid credentials return 401.
+
