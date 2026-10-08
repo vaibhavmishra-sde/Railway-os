@@ -39,3 +39,9 @@ JWT access token without exposing password hashes or other sensitive data.
 - Add login schema and endpoint.
 - Add token creation and expiry handling.
 
+
+## Security notes
+
+- Never log passwords, hashes, or tokens.
+- Use generic authentication failures.
+
