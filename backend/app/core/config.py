@@ -19,6 +19,9 @@ class Settings(BaseSettings):
 
     REDIS_HOST: str = "localhost"
     REDIS_PORT: int = 6379
+    JWT_SECRET_KEY: str = "development-only-change-this-secret"
+    JWT_ALGORITHM: str = "HS256"
+    JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
     @property
     def database_url(self) -> str:

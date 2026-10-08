@@ -1,4 +1,8 @@
-"""Password hashing helpers used by the identity service."""
+"""Password hashing and access-token helpers."""
+
+from datetime import UTC, datetime, timedelta
+
+from jose import jwt
 
 from passlib.context import CryptContext
 
@@ -15,3 +19,11 @@ def hash_password(password: str) -> str:
 def verify_password(password: str, password_hash: str) -> bool:
     """Check a plaintext password against a stored hash."""
     return password_context.verify(password, password_hash)
+
+
+def create_access_token(*, subject: str, secret_key: str, algorithm: str,
+                        expires_minutes: int) -> tuple[str, datetime]:
+    """Create a short-lived JWT and return it with its UTC expiry."""
+    expires_at = datetime.now(UTC) + timedelta(minutes=expires_minutes)
+    payload = {"sub": subject, "exp": expires_at, "type": "access"}
+    return jwt.encode(payload, secret_key, algorithm=algorithm), expires_at

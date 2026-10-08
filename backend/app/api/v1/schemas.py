@@ -17,6 +17,21 @@ class HealthResponse(BaseModel):
     version: str
 
 
+class LoginRequest(BaseModel):
+    """Credentials accepted by the login endpoint."""
+
+    email: str = Field(min_length=3, max_length=254)
+    password: str = Field(min_length=1, max_length=128)
+
+
+class TokenResponse(BaseModel):
+    """Short-lived access token response."""
+
+    access_token: str
+    token_type: Literal["bearer"] = "bearer"
+    expires_at: datetime
+
+
 class StationCreate(BaseModel):
     """Validated input used to create a station."""
 
