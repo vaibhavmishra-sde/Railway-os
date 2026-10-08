@@ -33,3 +33,9 @@ JWT access token without exposing password hashes or other sensitive data.
 - Login returns a short-lived JWT.
 - Invalid credentials return 401.
 
+
+## Implementation checklist
+
+- Add login schema and endpoint.
+- Add token creation and expiry handling.
+
