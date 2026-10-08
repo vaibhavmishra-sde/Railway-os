@@ -45,3 +45,9 @@ JWT access token without exposing password hashes or other sensitive data.
 - Never log passwords, hashes, or tokens.
 - Use generic authentication failures.
 
+
+## Verification
+
+- Run focused authentication tests.
+- Confirm the working tree is clean.
+
