@@ -58,3 +58,19 @@ def test_me_rejects_missing_and_malformed_tokens(client) -> None:
     assert client.get(
         "/api/v1/auth/me", headers={"Authorization": "Bearer not-a-jwt"}
     ).status_code == 401
+
+
+def test_me_rejects_user_deactivated_after_token_issue(client, db_session) -> None:
+    user = create_user(db_session, email="admin@example.com", password="secret")
+    token = client.post(
+        "/api/v1/auth/login",
+        json={"email": "admin@example.com", "password": "secret"},
+    ).json()["access_token"]
+    user.is_active = False
+    db_session.commit()
+
+    response = client.get(
+        "/api/v1/auth/me", headers={"Authorization": f"Bearer {token}"}
+    )
+
+    assert response.status_code == 401
