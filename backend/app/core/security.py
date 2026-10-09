@@ -2,8 +2,7 @@
 
 from datetime import UTC, datetime, timedelta
 
-from jose import jwt
-
+from jose import JWTError, jwt
 from passlib.context import CryptContext
 
 # PBKDF2-SHA256 is provided by Passlib itself and avoids backend-specific
@@ -27,3 +26,15 @@ def create_access_token(*, subject: str, secret_key: str, algorithm: str,
     expires_at = datetime.now(UTC) + timedelta(minutes=expires_minutes)
     payload = {"sub": subject, "exp": expires_at, "type": "access"}
     return jwt.encode(payload, secret_key, algorithm=algorithm), expires_at
+
+
+def decode_access_token(*, token: str, secret_key: str, algorithm: str) -> str | None:
+    """Return the user id from a valid access token, otherwise ``None``."""
+    try:
+        payload = jwt.decode(token, secret_key, algorithms=[algorithm])
+    except JWTError:
+        return None
+
+    if payload.get("type") != "access" or not isinstance(payload.get("sub"), str):
+        return None
+    return payload["sub"]

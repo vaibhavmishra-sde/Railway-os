@@ -32,6 +32,14 @@ class TokenResponse(BaseModel):
     expires_at: datetime
 
 
+class UserResponse(BaseModel):
+    """Safe representation of the authenticated user."""
+
+    id: str
+    email: str
+    is_active: bool
+
+
 class StationCreate(BaseModel):
     """Validated input used to create a station."""
 
