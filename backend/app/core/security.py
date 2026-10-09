@@ -23,8 +23,14 @@ def verify_password(password: str, password_hash: str) -> bool:
 def create_access_token(*, subject: str, secret_key: str, algorithm: str,
                         expires_minutes: int) -> tuple[str, datetime]:
     """Create a short-lived JWT and return it with its UTC expiry."""
-    expires_at = datetime.now(UTC) + timedelta(minutes=expires_minutes)
-    payload = {"sub": subject, "exp": expires_at, "type": "access"}
+    issued_at = datetime.now(UTC)
+    expires_at = issued_at + timedelta(minutes=expires_minutes)
+    payload = {
+        "sub": subject,
+        "iat": issued_at,
+        "exp": expires_at,
+        "type": "access",
+    }
     return jwt.encode(payload, secret_key, algorithm=algorithm), expires_at
 
 
