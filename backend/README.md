@@ -115,3 +115,22 @@ checks before each commit:
 The versioned service endpoints expose dated timetable data. Lists require a
 `service_date` query parameter and accept bounded `offset`/`limit` pagination.
 Service detail responses include stops ordered by `stop_sequence`.
+# Authentication quickstart
+
+Create a short-lived access token by signing in with an active user:
+
+```bash
+curl -X POST http://localhost:8000/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"admin@example.com","password":"your-password"}'
+```
+
+Use the returned `access_token` to resolve the authenticated identity:
+
+```bash
+curl http://localhost:8000/api/v1/auth/me \
+  -H "Authorization: Bearer <access_token>"
+```
+
+Authentication failures return `401 Unauthorized`. Never log or commit the
+access token, password, or password hash.
