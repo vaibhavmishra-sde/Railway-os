@@ -20,11 +20,15 @@ def current_user(
     db: Session = Depends(get_db),  # noqa: B008
 ) -> User:
     """Resolve the active user from a bearer access token."""
-    subject = decode_access_token(
-        token=credentials.credentials,
-        secret_key=settings.JWT_SECRET_KEY,
-        algorithm=settings.JWT_ALGORITHM,
-    ) if credentials else None
+    subject = (
+        decode_access_token(
+            token=credentials.credentials,
+            secret_key=settings.JWT_SECRET_KEY,
+            algorithm=settings.JWT_ALGORITHM,
+        )
+        if credentials
+        else None
+    )
     user = db.get(User, subject) if subject else None
     if user is None or not user.is_active:
         raise HTTPException(

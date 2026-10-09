@@ -36,7 +36,9 @@ def test_login_hides_invalid_and_inactive_credentials(client, db_session) -> Non
         assert response.json()["detail"] == "Invalid email or password"
 
 
-def test_me_returns_authenticated_user_without_sensitive_fields(client, db_session) -> None:
+def test_me_returns_authenticated_user_without_sensitive_fields(
+    client, db_session
+) -> None:
     create_user(db_session, email="admin@example.com", password="secret")
     login_response = client.post(
         "/api/v1/auth/login",
@@ -55,9 +57,12 @@ def test_me_returns_authenticated_user_without_sensitive_fields(client, db_sessi
 
 def test_me_rejects_missing_and_malformed_tokens(client) -> None:
     assert client.get("/api/v1/auth/me").status_code == 401
-    assert client.get(
-        "/api/v1/auth/me", headers={"Authorization": "Bearer not-a-jwt"}
-    ).status_code == 401
+    assert (
+        client.get(
+            "/api/v1/auth/me", headers={"Authorization": "Bearer not-a-jwt"}
+        ).status_code
+        == 401
+    )
 
 
 def test_me_rejects_user_deactivated_after_token_issue(client, db_session) -> None:

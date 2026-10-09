@@ -20,8 +20,9 @@ def verify_password(password: str, password_hash: str) -> bool:
     return password_context.verify(password, password_hash)
 
 
-def create_access_token(*, subject: str, secret_key: str, algorithm: str,
-                        expires_minutes: int) -> tuple[str, datetime]:
+def create_access_token(
+    *, subject: str, secret_key: str, algorithm: str, expires_minutes: int
+) -> tuple[str, datetime]:
     """Create a short-lived JWT and return it with its UTC expiry."""
     issued_at = datetime.now(UTC)
     expires_at = issued_at + timedelta(minutes=expires_minutes)
