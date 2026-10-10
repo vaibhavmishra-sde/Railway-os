@@ -101,6 +101,10 @@ ml/data/processed/
 node_modules/
 frontend/node_modules/
 
+# Operating-system metadata
+.DS_Store
+Thumbs.db
+
 # Build output — generated files, not source
 frontend/dist/
 frontend/build/
