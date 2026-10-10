@@ -62,3 +62,16 @@ python scripts/validate_env.py
 ```
 
 Never commit `.env`. It is git-ignored by design.
+
+## Local Verification
+
+Run the backend checks from the repository root before opening a pull request:
+
+```bash
+python -m pytest backend/tests
+ruff check backend
+ruff format --check backend
+```
+
+When working on a single area, run its focused test file first and then the
+full backend suite before committing.
