@@ -32,3 +32,9 @@ def test_readiness_endpoint_checks_database(client: TestClient) -> None:
 
     assert response.status_code == 200
     assert response.json()["status"] == "ok"
+
+
+def test_health_endpoint_includes_metadata_keys(client: TestClient) -> None:
+    response = client.get("/health")
+
+    assert set(response.json()) == {"status", "service", "version"}
