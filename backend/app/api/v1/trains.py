@@ -3,6 +3,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
+from app.api.v1.auth import require_roles
 from app.api.v1.schemas import CoachCreate, CoachResponse, TrainCreate, TrainResponse
 from app.db.session import get_db
 from app.repositories.train import get_train, list_active_trains, list_coaches
@@ -35,6 +36,7 @@ def get_train_endpoint(train_id: str, db: Session = Depends(get_db)) -> TrainRes
 def create_train_endpoint(
     payload: TrainCreate,
     db: Session = Depends(get_db),  # noqa: B008
+    _user=Depends(require_roles("admin", "operations_manager")),  # noqa: B008
 ) -> TrainResponse:
     try:
         return create_train(db, payload)
@@ -62,6 +64,7 @@ def add_coach_endpoint(
     train_id: str,
     payload: CoachCreate,
     db: Session = Depends(get_db),  # noqa: B008
+    _user=Depends(require_roles("admin", "operations_manager")),  # noqa: B008
 ) -> CoachResponse:
     train = get_train(db, train_id)
     if train is None:

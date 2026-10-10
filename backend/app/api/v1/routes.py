@@ -3,6 +3,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
+from app.api.v1.auth import require_roles
 from app.api.v1.schemas import (
     RouteCreate,
     RouteResponse,
@@ -45,6 +46,7 @@ def get_route(route_id: str, db: Session = Depends(get_db)) -> RouteResponse:  #
 def create_route_endpoint(
     payload: RouteCreate,
     db: Session = Depends(get_db),  # noqa: B008
+    _user=Depends(require_roles("admin", "operations_manager")),  # noqa: B008
 ) -> RouteResponse:
     try:
         return create_route(db, payload)
@@ -75,6 +77,7 @@ def add_route_stop_endpoint(
     route_id: str,
     payload: RouteStopCreate,
     db: Session = Depends(get_db),  # noqa: B008
+    _user=Depends(require_roles("admin", "operations_manager")),  # noqa: B008
 ) -> RouteStopResponse:
     route = get(db, route_id)
     if route is None:
