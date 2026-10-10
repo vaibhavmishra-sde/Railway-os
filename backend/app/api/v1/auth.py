@@ -1,4 +1,6 @@
-"""Authentication endpoints."""
+"""Authentication endpoints and authorization dependencies."""
+
+from collections.abc import Callable
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -63,3 +65,17 @@ def login(payload: LoginRequest, db: Session = Depends(get_db)) -> TokenResponse
 def me(user: User = Depends(current_user)) -> UserResponse:  # noqa: B008
     """Return the public identity represented by the access token."""
     return UserResponse(id=user.id, email=user.email, is_active=user.is_active)
+
+
+def require_roles(*allowed_roles: str) -> Callable:
+    """Build a dependency that permits users with at least one role."""
+
+    def role_guard(user: User = Depends(current_user)) -> User:  # noqa: B008
+        if not any(role.key in allowed_roles for role in user.roles):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Insufficient permissions",
+            )
+        return user
+
+    return role_guard

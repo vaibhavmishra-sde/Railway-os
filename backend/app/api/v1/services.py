@@ -5,6 +5,7 @@ from datetime import date
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
+from app.api.v1.auth import require_roles
 from app.api.v1.schemas import (
     ServiceStopCreate,
     ServiceStopResponse,
@@ -42,6 +43,7 @@ def list_services(
 def create_service_endpoint(
     payload: TrainServiceCreate,
     db: Session = Depends(get_db),  # noqa: B008
+    _user=Depends(require_roles("admin", "operations_manager")),  # noqa: B008
 ) -> TrainServiceResponse:
     try:
         return create_service(db, payload)
@@ -92,6 +94,7 @@ def add_service_stop_endpoint(
     service_id: str,
     payload: ServiceStopCreate,
     db: Session = Depends(get_db),  # noqa: B008
+    _user=Depends(require_roles("admin", "operations_manager")),  # noqa: B008
 ) -> ServiceStopResponse:
     service = get(db, service_id)
     if service is None:

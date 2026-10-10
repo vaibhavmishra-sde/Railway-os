@@ -1,5 +1,5 @@
 from app.core.security import hash_password
-from app.models.identity import User
+from app.models.identity import Role, User
 from app.services.identity import create_user
 
 
@@ -79,3 +79,44 @@ def test_me_rejects_user_deactivated_after_token_issue(client, db_session) -> No
     )
 
     assert response.status_code == 401
+
+
+def test_role_guard_rejects_authenticated_user_without_required_role(
+    client, db_session
+) -> None:
+    create_user(db_session, email="passenger@example.com", password="secret")
+    token = client.post(
+        "/api/v1/auth/login",
+        json={"email": "passenger@example.com", "password": "secret"},
+    ).json()["access_token"]
+
+    response = client.post(
+        "/api/v1/services",
+        headers={"Authorization": f"Bearer {token}"},
+        json={"train_id": "missing", "service_date": "2026-10-10"},
+    )
+
+    assert response.status_code == 403
+    assert response.json()["detail"] == "Insufficient permissions"
+
+
+def test_role_guard_allows_operations_manager_to_reach_endpoint(
+    client, db_session
+) -> None:
+    user = create_user(db_session, email="ops@example.com", password="secret")
+    user.roles.append(Role(key="operations_manager", name="Operations Manager"))
+    db_session.commit()
+    token = client.post(
+        "/api/v1/auth/login",
+        json={"email": "ops@example.com", "password": "secret"},
+    ).json()["access_token"]
+
+    response = client.post(
+        "/api/v1/services",
+        headers={"Authorization": f"Bearer {token}"},
+        json={"train_id": "missing", "service_date": "2026-10-10"},
+    )
+
+    # The role guard passes; the deliberately incomplete payload is rejected
+    # by request validation before the service lookup runs.
+    assert response.status_code == 422
