@@ -10,6 +10,9 @@ The project focuses on maintainable engineering: clear domain boundaries,
 database migrations, repeatable seed data, automated tests, and CI quality
 checks.
 
+For a quick local verification, run `python -m pytest backend/tests` from the
+repository root after installing the backend development dependencies.
+
 > RailwayOS is a simulation and portfolio project. It is not connected to an
 > official railway operator and must not be used for safety-critical dispatch
 > or real passenger transactions.
