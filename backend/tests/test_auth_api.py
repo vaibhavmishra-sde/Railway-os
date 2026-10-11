@@ -1,6 +1,7 @@
 from app.core.security import hash_password
 from app.models.identity import Role, User
 from app.services.identity import create_user
+from app.api.v1.auth import login_limiter
 
 
 def test_login_returns_bearer_token(client, db_session) -> None:
@@ -34,6 +35,26 @@ def test_login_hides_invalid_and_inactive_credentials(client, db_session) -> Non
         )
         assert response.status_code == 401
         assert response.json()["detail"] == "Invalid email or password"
+
+
+def test_login_rate_limit_returns_retryable_error(client) -> None:
+    login_limiter.clear()
+    for _ in range(5):
+        response = client.post(
+            "/api/v1/auth/login",
+            json={"email": "unknown@example.com", "password": "bad"},
+        )
+        assert response.status_code == 401
+
+    response = client.post(
+        "/api/v1/auth/login",
+        json={"email": "unknown@example.com", "password": "bad"},
+    )
+
+    assert response.status_code == 429
+    assert response.headers["retry-after"] == "60"
+    assert response.json()["detail"] == "Too many login attempts; try again later"
+    login_limiter.clear()
 
 
 def test_me_returns_authenticated_user_without_sensitive_fields(
