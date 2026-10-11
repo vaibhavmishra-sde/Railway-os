@@ -27,6 +27,7 @@ repository root after installing the backend development dependencies.
 - Liveness and database-readiness probes.
 - Identity models for users, roles, assignments, and audit events.
 - Password hashing and credential verification services.
+- Short-lived bearer authentication with login throttling and role guards.
 - Idempotent seed operations for repeatable demonstrations.
 - Generated OpenAPI documentation through FastAPI.
 
