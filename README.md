@@ -31,6 +31,9 @@ repository root after installing the backend development dependencies.
 - Idempotent seed operations for repeatable demonstrations.
 - Generated OpenAPI documentation through FastAPI.
 
+Authentication hardening details are documented in
+[the Day 35 auth note](docs/day-035-auth-hardening.md).
+
 ## Platform overview
 
 RailwayOS turns railway network information into a dependable operational
