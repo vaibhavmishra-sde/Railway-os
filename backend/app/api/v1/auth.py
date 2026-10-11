@@ -2,12 +2,13 @@
 
 from collections.abc import Callable
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
 
 from app.api.v1.schemas import LoginRequest, TokenResponse, UserResponse
 from app.core.config import settings
+from app.core.rate_limit import LoginRateLimiter
 from app.core.security import create_access_token, decode_access_token
 from app.db.session import get_db
 from app.models.identity import User
@@ -15,6 +16,10 @@ from app.services.identity import authenticate_user
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 bearer_scheme = HTTPBearer(auto_error=False)
+login_limiter = LoginRateLimiter(
+    max_attempts=settings.LOGIN_RATE_LIMIT_ATTEMPTS,
+    window_seconds=settings.LOGIN_RATE_LIMIT_WINDOW_SECONDS,
+)
 
 
 def current_user(
@@ -42,8 +47,19 @@ def current_user(
 
 
 @router.post("/login", response_model=TokenResponse)
-def login(payload: LoginRequest, db: Session = Depends(get_db)) -> TokenResponse:  # noqa: B008
+def login(
+    payload: LoginRequest,
+    request: Request,
+    db: Session = Depends(get_db),
+) -> TokenResponse:  # noqa: B008
     """Authenticate an active user and issue a short-lived access token."""
+    client_host = request.client.host if request.client else "unknown"
+    if not login_limiter.allow(f"{client_host}:{payload.email.strip().lower()}"):
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail="Too many login attempts; try again later",
+            headers={"Retry-After": str(settings.LOGIN_RATE_LIMIT_WINDOW_SECONDS)},
+        )
     user = authenticate_user(db, email=payload.email, password=payload.password)
     if user is None:
         raise HTTPException(
