@@ -50,7 +50,7 @@ def current_user(
 def login(
     payload: LoginRequest,
     request: Request,
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_db),  # noqa: B008
 ) -> TokenResponse:  # noqa: B008
     """Authenticate an active user and issue a short-lived access token."""
     client_host = request.client.host if request.client else "unknown"

@@ -1,7 +1,7 @@
+from app.api.v1.auth import login_limiter
 from app.core.security import hash_password
 from app.models.identity import Role, User
 from app.services.identity import create_user
-from app.api.v1.auth import login_limiter
 
 
 def test_login_returns_bearer_token(client, db_session) -> None:

@@ -1,7 +1,8 @@
 """HTTP tests for train and coach endpoints."""
 
 
-def test_create_train_add_coach_and_list_coaches(client) -> None:
+def test_create_train_add_coach_and_list_coaches(authenticated_client) -> None:
+    client = authenticated_client
     train_response = client.post(
         "/api/v1/trains", json={"number": "12301", "name": "Rajdhani"}
     )
@@ -20,13 +21,15 @@ def test_create_train_add_coach_and_list_coaches(client) -> None:
     assert len(list_response.json()) == 1
 
 
-def test_train_number_is_unique(client) -> None:
+def test_train_number_is_unique(authenticated_client) -> None:
+    client = authenticated_client
     payload = {"number": "12301", "name": "Rajdhani"}
     client.post("/api/v1/trains", json=payload)
     assert client.post("/api/v1/trains", json=payload).status_code == 409
 
 
-def test_list_and_get_train(client) -> None:
+def test_list_and_get_train(authenticated_client) -> None:
+    client = authenticated_client
     created = client.post(
         "/api/v1/trains", json={"number": "12301", "name": "Rajdhani"}
     ).json()
@@ -36,7 +39,8 @@ def test_list_and_get_train(client) -> None:
     assert client.get("/api/v1/trains/missing").status_code == 404
 
 
-def test_train_list_supports_search_and_pagination(client) -> None:
+def test_train_list_supports_search_and_pagination(authenticated_client) -> None:
+    client = authenticated_client
     for number, name in (("12301", "Rajdhani"), ("12951", "Mumbai Express")):
         client.post("/api/v1/trains", json={"number": number, "name": name})
 

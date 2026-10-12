@@ -1,7 +1,8 @@
 """HTTP tests for route endpoints."""
 
 
-def test_create_route_add_stop_and_list_stops(client) -> None:
+def test_create_route_add_stop_and_list_stops(authenticated_client) -> None:
+    client = authenticated_client
     station = client.post(
         "/api/v1/stations",
         json={"code": "NDLS", "name": "New Delhi", "city": "Delhi", "state": "Delhi"},
@@ -28,13 +29,17 @@ def test_create_route_add_stop_and_list_stops(client) -> None:
     assert [stop["station_id"] for stop in list_response.json()] == [station["id"]]
 
 
-def test_route_code_is_unique(client) -> None:
+def test_route_code_is_unique(authenticated_client) -> None:
+    client = authenticated_client
     payload = {"code": "NDLS-BCT", "name": "Capital Express", "total_distance_km": 1384}
     assert client.post("/api/v1/routes", json=payload).status_code == 201
     assert client.post("/api/v1/routes", json=payload).status_code == 409
 
 
-def test_get_route_returns_route_and_missing_route_is_not_found(client) -> None:
+def test_get_route_returns_route_and_missing_route_is_not_found(
+    authenticated_client,
+) -> None:
+    client = authenticated_client
     created = client.post(
         "/api/v1/routes",
         json={"code": "NDLS-BCT", "name": "Capital Express", "total_distance_km": 1384},
@@ -44,7 +49,8 @@ def test_get_route_returns_route_and_missing_route_is_not_found(client) -> None:
     assert client.get("/api/v1/routes/missing").status_code == 404
 
 
-def test_route_list_supports_search_and_pagination(client) -> None:
+def test_route_list_supports_search_and_pagination(authenticated_client) -> None:
+    client = authenticated_client
     for code, name in (("NDLS-BCT", "Capital Express"), ("JP-ADI", "Desert Link")):
         client.post(
             "/api/v1/routes",

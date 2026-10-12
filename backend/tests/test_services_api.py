@@ -1,7 +1,8 @@
 """HTTP tests for dated train-service endpoints."""
 
 
-def test_create_service_add_stop_and_filter_by_date(client) -> None:
+def test_create_service_add_stop_and_filter_by_date(authenticated_client) -> None:
+    client = authenticated_client
     train = client.post(
         "/api/v1/trains", json={"number": "12301", "name": "Rajdhani"}
     ).json()
@@ -65,7 +66,8 @@ def test_service_detail_returns_404_for_unknown_service(client) -> None:
     assert response.status_code == 404
 
 
-def test_services_list_supports_bounded_pagination(client) -> None:
+def test_services_list_supports_bounded_pagination(authenticated_client) -> None:
+    client = authenticated_client
     train = client.post(
         "/api/v1/trains", json={"number": "12301", "name": "Rajdhani"}
     ).json()
@@ -92,7 +94,8 @@ def test_services_list_supports_bounded_pagination(client) -> None:
     assert response.json() == []
 
 
-def test_service_rejects_duplicate_stop_sequence(client) -> None:
+def test_service_rejects_duplicate_stop_sequence(authenticated_client) -> None:
+    client = authenticated_client
     train = client.post(
         "/api/v1/trains", json={"number": "12301", "name": "Rajdhani"}
     ).json()
@@ -140,7 +143,8 @@ def test_services_require_service_date(client) -> None:
     assert response.status_code == 422
 
 
-def test_service_rejects_duplicate_train_date(client) -> None:
+def test_service_rejects_duplicate_train_date(authenticated_client) -> None:
+    client = authenticated_client
     train = client.post(
         "/api/v1/trains", json={"number": "12301", "name": "Rajdhani"}
     ).json()

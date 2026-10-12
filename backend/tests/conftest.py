@@ -68,3 +68,21 @@ def client(db_session) -> TestClient:
     application.dependency_overrides[get_db] = override_get_db
     with TestClient(application) as test_client:
         yield test_client
+
+
+@pytest.fixture
+def authenticated_client(client, db_session) -> TestClient:
+    """Return a client authenticated as an administrator for mutation tests."""
+    from app.api.v1.auth import login_limiter
+    from app.models.identity import Role
+    from app.services.identity import create_user
+
+    login_limiter.clear()
+    user = create_user(db_session, email="ci-admin@example.com", password="secret")
+    user.roles.append(Role(key="admin", name="Administrator"))
+    db_session.commit()
+    token = client.post(
+        "/api/v1/auth/login", json={"email": user.email, "password": "secret"}
+    ).json()["access_token"]
+    client.headers.update({"Authorization": f"Bearer {token}"})
+    return client
