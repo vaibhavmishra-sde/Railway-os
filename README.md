@@ -2,6 +2,7 @@
 
 ### A modular railway operations platform for schedules, network data, and operational workflows
 
+
 RailwayOS is an API-first railway operations platform built with FastAPI. It
 models stations, trains, coaches, seats, routes, dated services, timetable
 stops, users, roles, and audit events using deterministic synthetic data.
