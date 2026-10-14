@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./styles.css";
+import "./ui-overrides.css";
 import { api, type Station, type Service } from "./api";
 import { useEffect, useState } from "react";
 
