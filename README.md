@@ -291,6 +291,20 @@ seed idempotency, identity models, password hashing, and database-isolated
 integration behaviour. GitHub Actions runs the backend checks on Python 3.11
 and 3.12.
 
+### Pull request checklist
+
+Before opening a pull request, confirm that the local environment is valid and
+the backend checks pass:
+
+```powershell
+python scripts/validate_env.py
+.\scripts\check-backend.ps1
+```
+
+If the change affects API behaviour, update the relevant documentation and add
+or adjust a focused test. Keep generated files, local `.env` files, and
+database credentials out of commits.
+
 ## Security and reliability
 
 - Secrets are loaded from environment configuration and excluded from Git.
