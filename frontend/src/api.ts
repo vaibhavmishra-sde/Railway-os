@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_URL ?? "http://localhost:8000/api/v1";
+const API_BASE = (import.meta.env.VITE_API_URL ?? "http://localhost:8000/api/v1").replace(/\/$/, "");
 
 export class ApiError extends Error {
   constructor(public readonly status: number, message: string) {
@@ -12,7 +12,7 @@ export type Service = { id: string; train_id: string; route_id: string; service_
 export type LoginResponse = { access_token: string; expires_at: string };
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
-  const response = await fetch(`${API_BASE}${path}`, { headers: { "Content-Type": "application/json", ...options?.headers }, ...options });
+  const response = await fetch(`${API_BASE}${path}`, { ...options, headers: { Accept: "application/json", "Content-Type": "application/json", ...options?.headers } });
   if (!response.ok) throw new ApiError(response.status, (await response.json().catch(() => null))?.detail ?? `Request failed (${response.status})`);
   return response.json() as Promise<T>;
 }
