@@ -13,3 +13,5 @@ The next seven increments build on the Day 37–38 frontend foundation:
 The first implementation uses the existing `/api/v1/stations`,
 `/api/v1/services`, and `/api/v1/auth/login` contracts. Booking remains a
 presentation scaffold until the booking API is implemented.
+
+Day 39 implementation details are recorded in [day-039-frontend-api.md](day-039-frontend-api.md).
