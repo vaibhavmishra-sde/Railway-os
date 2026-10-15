@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import "./styles.css";
 import "./ui-overrides.css";
 import { api, type Station, type Service } from "./api";
+import { useQuery } from "./useQuery";
 import { useEffect, useState } from "react";
 
 const demoServices = [
@@ -17,6 +18,8 @@ function App() {
   const [serviceData, setServiceData] = useState<Service[] | null>(null);
   const [serviceError, setServiceError] = useState("");
   const [loading, setLoading] = useState(false);
+  const serviceQuery = useQuery(() => api.services("2026-10-14"), []);
+  useEffect(() => { setServiceData(serviceQuery.data); setServiceError(serviceQuery.error?.message ?? ""); }, [serviceQuery.data, serviceQuery.error]);
   const [authOpen, setAuthOpen] = useState(false);
   const [bookingOpen, setBookingOpen] = useState(false);
   useEffect(() => { if (from.length < 2) { setSuggestions([]); return; } const timer = setTimeout(() => { api.stations(from).then(setSuggestions).catch(() => setSuggestions([])); }, 250); return () => clearTimeout(timer); }, [from]);
