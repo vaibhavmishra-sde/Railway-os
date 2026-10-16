@@ -8,7 +8,13 @@ export class ApiError extends Error {
 }
 
 export type Station = { id: string; code: string; name: string; city: string; state: string };
-export type Service = { id: string; train_id: string; route_id: string; service_date: string; status: string };
+export type Service = {
+  id: string;
+  train_id: string;
+  route_id: string;
+  service_date: string;
+  status: "scheduled" | "boarding" | "departed" | "delayed" | "cancelled" | string;
+};
 export type LoginResponse = { access_token: string; expires_at: string };
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
@@ -19,6 +25,6 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
 
 export const api = {
   stations: (search: string) => request<Station[]>(`/stations?limit=8${search ? `&search=${encodeURIComponent(search)}` : ""}`),
-  services: (date: string) => request<Service[]>(`/services?service_date=${encodeURIComponent(date)}`),
+  services: (date: string, signal?: AbortSignal) => request<Service[]>(`/services?service_date=${encodeURIComponent(date)}`, { signal }),
   login: (email: string, password: string) => request<LoginResponse>("/auth/login", { method: "POST", body: JSON.stringify({ email, password }) }),
 };
