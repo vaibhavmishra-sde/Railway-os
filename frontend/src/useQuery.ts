@@ -11,7 +11,8 @@ export function useQuery<T>(query: () => Promise<T>, dependencies: readonly unkn
   const run = useCallback(async () => {
     setState((current) => ({ ...current, loading: true, error: null }));
     try {
-      setState({ data: await query(), error: null, loading: false });
+      const data = await query();
+      setState({ data, error: null, loading: false });
     } catch (error) {
       setState({ data: null, error: error instanceof Error ? error : new Error("Request failed"), loading: false });
     }
