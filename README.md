@@ -325,6 +325,7 @@ database credentials out of commits.
 - [API examples](docs/day-027-api-examples.md)
 - [Authentication design](docs/day-029-auth-design.md)
 - [Identity implementation](docs/day-030-implementation.md)
+- [Dated service search](docs/day-040-task.md)
 
 ## License
 
