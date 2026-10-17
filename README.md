@@ -326,6 +326,7 @@ database credentials out of commits.
 - [Authentication design](docs/day-029-auth-design.md)
 - [Identity implementation](docs/day-030-implementation.md)
 - [Dated service search](docs/day-040-task.md)
+- [Service search resilience](docs/day-041-task.md)
 
 ## License
 
