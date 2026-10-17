@@ -27,3 +27,7 @@ The focused service-board assertions live in `frontend/src/serviceBoard.test.ts`
 
 Status badges classify delayed and cancelled services as warnings; keyboard
 focus remains visible for the search and booking controls.
+
+## Collaboration note
+
+The dated service board supports local travel-date selection.
