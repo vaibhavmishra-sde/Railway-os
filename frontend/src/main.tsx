@@ -14,7 +14,7 @@ function App() {
   const [date, setDate] = useState(today);
   const [suggestions, setSuggestions] = useState<Station[]>([]);
   const [bookingOpen, setBookingOpen] = useState(false);
-  const query = useQuery<Service[]>(() => api.services(date), [date]);
+  const query = useQuery<Service[]>((signal) => api.services(date, signal), [date]);
 
   useEffect(() => {
     if (from.length < 2) { setSuggestions([]); return; }
