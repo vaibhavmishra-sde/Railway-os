@@ -11,6 +11,8 @@ travel date is reflected in the request and in the displayed results.
 - Added a date-driven request to `GET /api/v1/services`.
 - Added loading, empty, and API error states.
 - Preserved station autocomplete while the service query refreshes.
+- Travel dates are generated in the passenger's local timezone.
+- Empty, error, and loading states remain explicit while results refresh.
 
 ## Verification
 
@@ -20,3 +22,5 @@ From `frontend/`:
 npm run build
 npm run lint
 ```
+
+The focused service-board assertions live in `frontend/src/serviceBoard.test.ts`.
