@@ -18,7 +18,10 @@ export type Service = {
 export type LoginResponse = { access_token: string; expires_at: string };
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
-  const response = await fetch(`${API_BASE}${path}`, { ...options, headers: { Accept: "application/json", "Content-Type": "application/json", ...options?.headers } });
+  const response = await fetch(`${API_BASE}${path}`, {
+    ...options,
+    headers: { Accept: "application/json", "Content-Type": "application/json", ...options?.headers },
+  });
   if (!response.ok) throw new ApiError(response.status, (await response.json().catch(() => null))?.detail ?? `Request failed (${response.status})`);
   return response.json() as Promise<T>;
 }
