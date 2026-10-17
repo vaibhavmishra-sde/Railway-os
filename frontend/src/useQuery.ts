@@ -18,9 +18,7 @@ export function useQuery<T>(query: () => Promise<T>, dependencies: readonly unkn
     }
   }, dependencies);
   useEffect(() => {
-    let active = true;
     void run();
-    return () => { active = false; };
   }, [run]);
   return { ...state, refetch: run };
 }
