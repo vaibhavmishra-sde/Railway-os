@@ -17,6 +17,10 @@ export function useQuery<T>(query: () => Promise<T>, dependencies: readonly unkn
       setState({ data: null, error: error instanceof Error ? error : new Error("Request failed"), loading: false });
     }
   }, dependencies);
-  useEffect(() => { void run(); }, [run]);
+  useEffect(() => {
+    let active = true;
+    void run().then(() => { if (!active) return; });
+    return () => { active = false; };
+  }, [run]);
   return { ...state, refetch: run };
 }
