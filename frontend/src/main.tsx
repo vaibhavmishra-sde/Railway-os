@@ -4,8 +4,9 @@ import "./styles.css";
 import "./ui-overrides.css";
 import { api, type Service, type Station } from "./api";
 import { useQuery } from "./useQuery";
+import { localDateInputValue } from "./serviceBoard";
 
-const today = new Date().toISOString().slice(0, 10);
+const today = localDateInputValue();
 const statusLabel = (status: string) => status.replace(/_/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
 
 function App() {
