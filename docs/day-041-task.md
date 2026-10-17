@@ -11,3 +11,9 @@ the API is temporarily unavailable.
 - Preserve a clear error state with a retry action.
 - Validate service dates and classify warning statuses consistently.
 - Document the verification path for the resilient service board.
+
+## Verification
+
+From `frontend/`, run `npm run build` and `npm run lint`. Change the selected
+date twice quickly in a browser and confirm only the latest request populates
+the board.
