@@ -6,6 +6,8 @@ export const serviceRouteLabel = (routeId: string) => routeId ? `Route ${routeId
 
 export const serviceDateLabel = (date: string) => date || "Date unavailable";
 
+export const isServiceDate = (date: string) => /^\d{4}-\d{2}-\d{2}$/.test(date);
+
 export const localDateInputValue = (date = new Date()) => {
   const offset = date.getTimezoneOffset() * 60_000;
   return new Date(date.getTime() - offset).toISOString().slice(0, 10);
