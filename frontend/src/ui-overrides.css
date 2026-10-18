@@ -6,3 +6,19 @@
   outline: 3px solid #ef6c4d;
   outline-offset: 3px;
 }
+.login-form { display: grid; gap: 14px; margin-top: 18px; }
+.login-form .primary { width: 100%; }
+.suggestions button:hover, .book-link:hover, nav a:hover { color: #b85536; }
+@media (max-width: 520px) {
+  .shell { padding-inline: 16px; }
+  .topbar { height: 68px; gap: 12px; }
+  .hero h1 { font-size: clamp(2.7rem, 15vw, 4rem); }
+  .search-card, .operations { padding: 20px; }
+  .section-heading { align-items: flex-start; gap: 12px; flex-direction: column; }
+  .service { grid-template-columns: 1fr auto; gap: 10px; }
+  .service .route, .service .status { grid-column: 1 / -1; }
+  .service .book-link { grid-column: 2; grid-row: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+}
