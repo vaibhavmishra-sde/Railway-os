@@ -18,9 +18,10 @@ export type Service = {
 export type LoginResponse = { access_token: string; expires_at: string };
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
+  const token = getAccessToken();
   const response = await fetch(`${API_BASE}${path}`, {
     ...options,
-    headers: { Accept: "application/json", "Content-Type": "application/json", ...options?.headers },
+    headers: { Accept: "application/json", "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}), ...options?.headers },
   });
   if (!response.ok) throw new ApiError(response.status, (await response.json().catch(() => null))?.detail ?? `Request failed (${response.status})`);
   return response.json() as Promise<T>;
@@ -30,4 +31,6 @@ export const api = {
   stations: (search: string) => request<Station[]>(`/stations?limit=8${search ? `&search=${encodeURIComponent(search)}` : ""}`),
   services: (date: string, signal?: AbortSignal) => request<Service[]>(`/services?service_date=${encodeURIComponent(date)}`, { signal }),
   login: (email: string, password: string) => request<LoginResponse>("/auth/login", { method: "POST", body: JSON.stringify({ email, password }) }),
+  me: () => request<{ id: string; email: string; is_active: boolean }>("/auth/me"),
 };
+import { getAccessToken } from "./auth";
