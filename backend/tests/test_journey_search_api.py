@@ -1,5 +1,14 @@
 """Contract tests for direct dated journey search."""
 
+from datetime import time
+
+from app.api.v1.search import _duration_minutes
+
+
+def test_duration_calculation_crosses_midnight():
+    assert _duration_minutes(time(23, 45), time(1, 15)) == 90
+    assert _duration_minutes(None, time(1, 15)) is None
+
 
 def _create_network(client):
     stations = {}
@@ -46,6 +55,20 @@ def _create_network(client):
 
 def test_search_returns_ordered_direct_match(authenticated_client):
     _create_network(authenticated_client)
+    trains = authenticated_client.get("/api/v1/trains?search=12301").json()
+    train_id = trains[0]["id"]
+    for coach_number, seat_class in (("A1", "FIRST_AC"), ("S1", "SLEEPER")):
+        assert (
+            authenticated_client.post(
+                f"/api/v1/trains/{train_id}/coaches",
+                json={
+                    "coach_number": coach_number,
+                    "seat_class": seat_class,
+                    "total_seats": 20,
+                },
+            ).status_code
+            == 201
+        )
     response = authenticated_client.get(
         "/api/v1/search/journeys?origin=ndls&destination=bct&service_date=2026-10-19"
     )
@@ -54,6 +77,10 @@ def test_search_returns_ordered_direct_match(authenticated_client):
     assert body["origin"] == "NDLS"
     assert body["items"][0]["origin"]["stop_sequence"] == 1
     assert body["items"][0]["destination"]["station_name"] == "Mumbai Central"
+    assert body["items"][0]["departure_time"] == "06:00:00"
+    assert body["items"][0]["arrival_time"] == "14:00:00"
+    assert body["items"][0]["duration_minutes"] == 480
+    assert body["items"][0]["available_classes"] == ["FIRST_AC", "SLEEPER"]
 
 
 def test_search_rejects_same_and_unknown_stations(client):
