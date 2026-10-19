@@ -9,3 +9,14 @@ Implemented schedule fields in `GET /api/v1/search/journeys`:
 
 Coverage includes API response assertions and a direct overnight-duration
 unit test.
+
+Example result fragment:
+
+```json
+{
+  "departure_time": "23:45:00",
+  "arrival_time": "01:15:00",
+  "duration_minutes": 90,
+  "available_classes": ["SLEEPER", "THIRD_AC"]
+}
+```
