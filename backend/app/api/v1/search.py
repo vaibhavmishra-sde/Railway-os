@@ -1,6 +1,6 @@
 """Direct journey search over dated train-service timetables."""
 
-from datetime import date
+from datetime import date, datetime, time
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import select
@@ -82,6 +82,12 @@ def search_journeys(
             or origin_stop.stop_sequence >= destination_stop.stop_sequence
         ):
             continue
+        departure_time = origin_stop.scheduled_departure or origin_stop.scheduled_arrival
+        arrival_time = destination_stop.scheduled_arrival or destination_stop.scheduled_departure
+        duration_minutes = _duration_minutes(departure_time, arrival_time)
+        available_classes = sorted(
+            {coach.seat_class for coach in service.train.coaches}, key=lambda item: item.value
+        )
         matches.append(
             JourneySearchResult(
                 service_id=service.id,
@@ -102,6 +108,10 @@ def search_journeys(
                     scheduled_arrival=destination_stop.scheduled_arrival,
                     scheduled_departure=destination_stop.scheduled_departure,
                 ),
+                departure_time=departure_time,
+                arrival_time=arrival_time,
+                duration_minutes=duration_minutes,
+                available_classes=available_classes,
             )
         )
     matches.sort(
@@ -120,3 +130,14 @@ def search_journeys(
         offset=offset,
         limit=limit,
     )
+
+
+def _duration_minutes(departure: time | None, arrival: time | None) -> int | None:
+    """Calculate elapsed minutes, allowing a journey to cross midnight."""
+    if departure is None or arrival is None:
+        return None
+    start = datetime.combine(date.min, departure)
+    end = datetime.combine(date.min, arrival)
+    if end < start:
+        end = end.replace(day=end.day + 1)
+    return int((end - start).total_seconds() // 60)
