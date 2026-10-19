@@ -229,3 +229,45 @@ class ServiceStopResponse(BaseModel):
     scheduled_arrival: time | None
     scheduled_departure: time | None
     platform_number: str | None
+
+
+class JourneySearchRequest(BaseModel):
+    """Inputs for a direct, dated passenger journey search."""
+
+    origin: str = Field(min_length=2, max_length=10, examples=["NDLS"])
+    destination: str = Field(min_length=2, max_length=10, examples=["BCT"])
+    service_date: date = Field(examples=["2026-10-01"])
+    seat_class: SeatClass | None = Field(default=None, examples=["3A"])
+
+
+class JourneySearchStop(BaseModel):
+    """The origin or destination timing selected from a service timetable."""
+
+    station_code: str
+    station_name: str
+    stop_sequence: int
+    scheduled_arrival: time | None
+    scheduled_departure: time | None
+
+
+class JourneySearchResult(BaseModel):
+    """A direct service matching one journey search."""
+
+    service_id: str
+    train_number: str
+    train_name: str
+    service_date: date
+    origin: JourneySearchStop
+    destination: JourneySearchStop
+
+
+class JourneySearchResponse(BaseModel):
+    """Stable envelope for journey search results and pagination metadata."""
+
+    items: list[JourneySearchResult] = Field(default_factory=list)
+    origin: str
+    destination: str
+    service_date: date
+    total: int = Field(ge=0)
+    offset: int = Field(ge=0)
+    limit: int = Field(ge=1, le=100)
