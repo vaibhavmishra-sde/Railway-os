@@ -259,6 +259,10 @@ class JourneySearchResult(BaseModel):
     service_date: date
     origin: JourneySearchStop
     destination: JourneySearchStop
+    departure_time: time | None
+    arrival_time: time | None
+    duration_minutes: int | None = Field(default=None, ge=0)
+    available_classes: list[SeatClass] = Field(default_factory=list)
 
 
 class JourneySearchResponse(BaseModel):
