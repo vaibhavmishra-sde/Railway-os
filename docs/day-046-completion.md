@@ -10,6 +10,10 @@ Implemented schedule fields in `GET /api/v1/search/journeys`:
 Coverage includes API response assertions and a direct overnight-duration
 unit test.
 
+The optional `seat_class` query parameter continues to filter services by
+coach inventory, while `available_classes` reports every distinct class on a
+matching train in stable enum order.
+
 Example result fragment:
 
 ```json
