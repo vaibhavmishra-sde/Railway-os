@@ -7,7 +7,9 @@ from app.api.v1.search import _duration_minutes
 
 def test_duration_calculation_crosses_midnight():
     assert _duration_minutes(time(23, 45), time(1, 15)) == 90
+    assert _duration_minutes(time(8, 0), time(8, 0)) == 0
     assert _duration_minutes(None, time(1, 15)) is None
+    assert _duration_minutes(time(8, 0), None) is None
 
 
 def _create_network(client):
