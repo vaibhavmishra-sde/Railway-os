@@ -259,10 +259,21 @@ class JourneySearchResult(BaseModel):
     service_date: date
     origin: JourneySearchStop
     destination: JourneySearchStop
-    departure_time: time | None
-    arrival_time: time | None
-    duration_minutes: int | None = Field(default=None, ge=0)
-    available_classes: list[SeatClass] = Field(default_factory=list)
+    departure_time: time | None = Field(
+        description="Effective departure time at the requested origin"
+    )
+    arrival_time: time | None = Field(
+        description="Effective arrival time at the requested destination"
+    )
+    duration_minutes: int | None = Field(
+        default=None,
+        ge=0,
+        description="Elapsed journey duration; supports overnight services",
+    )
+    available_classes: list[SeatClass] = Field(
+        default_factory=list,
+        description="Distinct coach classes available on the train",
+    )
 
 
 class JourneySearchResponse(BaseModel):
