@@ -34,3 +34,9 @@ def test_search_supports_pagination_and_empty_result(authenticated_client):
     assert response.status_code == 200
     assert response.json()["total"] == 0
     assert response.json()["items"] == []
+
+
+def test_search_rejects_invalid_pagination_and_missing_query(client):
+    assert client.get("/api/v1/search/journeys?origin=NDLS&destination=BCT&service_date=2026-10-19&limit=101").status_code == 422
+    assert client.get("/api/v1/search/journeys?origin=NDLS&destination=BCT&service_date=2026-10-19&offset=-1").status_code == 422
+    assert client.get("/api/v1/search/journeys").status_code == 422
