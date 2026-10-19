@@ -82,11 +82,16 @@ def search_journeys(
             or origin_stop.stop_sequence >= destination_stop.stop_sequence
         ):
             continue
-        departure_time = origin_stop.scheduled_departure or origin_stop.scheduled_arrival
-        arrival_time = destination_stop.scheduled_arrival or destination_stop.scheduled_departure
+        departure_time = (
+            origin_stop.scheduled_departure or origin_stop.scheduled_arrival
+        )
+        arrival_time = (
+            destination_stop.scheduled_arrival or destination_stop.scheduled_departure
+        )
         duration_minutes = _duration_minutes(departure_time, arrival_time)
         available_classes = sorted(
-            {coach.seat_class for coach in service.train.coaches}, key=lambda item: item.value
+            {coach.seat_class for coach in service.train.coaches},
+            key=lambda item: item.value,
         )
         matches.append(
             JourneySearchResult(
