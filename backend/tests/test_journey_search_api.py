@@ -124,3 +124,21 @@ def test_search_rejects_invalid_pagination_and_missing_query(client):
         == 422
     )
     assert client.get("/api/v1/search/journeys").status_code == 422
+
+
+def test_search_seat_class_filter_uses_available_coaches(authenticated_client):
+    _create_network(authenticated_client)
+    train_id = authenticated_client.get("/api/v1/trains?search=12301").json()[0]["id"]
+    authenticated_client.post(
+        f"/api/v1/trains/{train_id}/coaches",
+        json={"coach_number": "S1", "seat_class": "SLEEPER", "total_seats": 20},
+    )
+
+    sleeper = authenticated_client.get(
+        "/api/v1/search/journeys?origin=NDLS&destination=BCT&service_date=2026-10-19&seat_class=SLEEPER"
+    )
+    first_ac = authenticated_client.get(
+        "/api/v1/search/journeys?origin=NDLS&destination=BCT&service_date=2026-10-19&seat_class=FIRST_AC"
+    )
+    assert len(sleeper.json()["items"]) == 1
+    assert first_ac.json()["items"] == []
