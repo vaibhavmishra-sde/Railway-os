@@ -151,7 +151,9 @@ def _duration_minutes(departure: time | None, arrival: time | None) -> int | Non
 def _sort_key(result: JourneySearchResult, sort: str) -> tuple:
     """Build a total-order key so pagination remains deterministic."""
     if sort == "duration":
-        primary = result.duration_minutes if result.duration_minutes is not None else 10**9
+        primary = (
+            result.duration_minutes if result.duration_minutes is not None else 10**9
+        )
     elif sort == "fare":
         primary = min(result.fares.values(), default=10**9)
     else:

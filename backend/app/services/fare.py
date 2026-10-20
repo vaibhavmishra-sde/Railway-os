@@ -11,7 +11,9 @@ _CLASS_MULTIPLIERS: dict[SeatClass, float] = {
 }
 
 
-def calculate_fares(distance_km: float, classes: list[SeatClass]) -> dict[SeatClass, int]:
+def calculate_fares(
+    distance_km: float, classes: list[SeatClass]
+) -> dict[SeatClass, int]:
     """Return stable whole-rupee fares for the requested route and classes."""
     base_fare = max(50, round(distance_km * 0.9))
     return {
