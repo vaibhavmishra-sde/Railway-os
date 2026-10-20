@@ -127,6 +127,25 @@ def test_search_rejects_invalid_pagination_and_missing_query(client):
     assert client.get("/api/v1/search/journeys").status_code == 422
 
 
+def test_search_rejects_unknown_sort(client):
+    assert (
+        client.get(
+            "/api/v1/search/journeys?origin=NDLS&destination=BCT&service_date=2026-10-19&sort=price"
+        ).status_code
+        == 422
+    )
+
+
+def test_search_supports_sort_and_page_boundaries(authenticated_client):
+    _create_network(authenticated_client)
+    response = authenticated_client.get(
+        "/api/v1/search/journeys?origin=NDLS&destination=BCT&service_date=2026-10-19&sort=duration&offset=1&limit=1"
+    )
+    assert response.status_code == 200
+    assert response.json()["offset"] == 1
+    assert response.json()["items"] == []
+
+
 def test_search_seat_class_filter_uses_available_coaches(authenticated_client):
     _create_network(authenticated_client)
     train_id = authenticated_client.get("/api/v1/trains?search=12301").json()[0]["id"]
