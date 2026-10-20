@@ -111,7 +111,6 @@ def test_search_supports_pagination_and_empty_result(authenticated_client):
     assert response.status_code == 200
     assert response.json()["total"] == 0
     assert response.json()["items"] == []
-    assert response.json()["sort"] == "duration"
 
 
 def test_search_supports_descending_sort_flag(authenticated_client):
@@ -156,6 +155,7 @@ def test_search_supports_sort_and_page_boundaries(authenticated_client):
     assert response.status_code == 200
     assert response.json()["offset"] == 1
     assert response.json()["items"] == []
+    assert response.json()["sort"] == "duration"
 
 
 def test_search_seat_class_filter_uses_available_coaches(authenticated_client):
