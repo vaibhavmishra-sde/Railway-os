@@ -83,6 +83,7 @@ def test_search_returns_ordered_direct_match(authenticated_client):
     assert body["items"][0]["arrival_time"] == "14:00:00"
     assert body["items"][0]["duration_minutes"] == 480
     assert body["items"][0]["available_classes"] == ["FIRST_AC", "SLEEPER"]
+    assert body["items"][0]["fares"] == {"FIRST_AC": 378, "SLEEPER": 122}
 
 
 def test_search_rejects_same_and_unknown_stations(client):
