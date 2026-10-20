@@ -17,3 +17,13 @@ def test_journey_cache_key_distinguishes_all_classes():
     assert journey_cache_key(
         date(2026, 10, 21), "NDLS", "BCT", None, "departure", False, 0, 50
     ).endswith(":all:departure:false:0:50")
+
+
+def test_journey_cache_key_normalizes_station_case():
+    upper = journey_cache_key(
+        date(2026, 10, 21), "NDLS", "BCT", None, "departure", False, 0, 50
+    )
+    lower = journey_cache_key(
+        date(2026, 10, 21), "ndls", "bct", None, "departure", False, 0, 50
+    )
+    assert upper == lower
