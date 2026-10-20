@@ -28,6 +28,8 @@ def search_journeys(
     seat_class: SeatClass | None = Query(None),  # noqa: B008
     offset: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=100),
+    sort: str = Query("departure", pattern="^(departure|duration|fare)$"),
+    descending: bool = Query(False),
     db: Session = Depends(get_db),  # noqa: B008
 ) -> JourneySearchResponse:
     """Find direct services whose ordered stops contain both stations."""
@@ -123,13 +125,7 @@ def search_journeys(
                 fares=fares,
             )
         )
-    matches.sort(
-        key=lambda item: (
-            item.origin.scheduled_departure or item.origin.scheduled_arrival,
-            item.train_number,
-            item.service_id,
-        )
-    )
+    matches.sort(key=lambda item: _sort_key(item, sort), reverse=descending)
     return JourneySearchResponse(
         items=matches[offset : offset + limit],
         origin=normalized_origin,
@@ -150,3 +146,14 @@ def _duration_minutes(departure: time | None, arrival: time | None) -> int | Non
     if end < start:
         end = end.replace(day=end.day + 1)
     return int((end - start).total_seconds() // 60)
+
+
+def _sort_key(result: JourneySearchResult, sort: str) -> tuple:
+    """Build a total-order key so pagination remains deterministic."""
+    if sort == "duration":
+        primary = result.duration_minutes if result.duration_minutes is not None else 10**9
+    elif sort == "fare":
+        primary = min(result.fares.values(), default=10**9)
+    else:
+        primary = result.departure_time or result.arrival_time or time.max
+    return primary, result.train_number, result.service_id
