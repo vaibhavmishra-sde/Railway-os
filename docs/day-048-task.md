@@ -15,3 +15,6 @@ Entries should use a short TTL because timetable and inventory data can change.
 Writes to services, stops, routes, coaches, or seats should invalidate keys
 for the affected service date and stations. The current implementation remains
 database-backed and does not require Redis to run locally.
+
+The response echoes `sort` and `descending` so clients can preserve the exact
+ordering they requested while navigating pages.
