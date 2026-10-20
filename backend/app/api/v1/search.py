@@ -15,6 +15,7 @@ from app.db.session import get_db
 from app.models.service import ServiceStop, TrainService
 from app.models.station import Station
 from app.models.train import SeatClass, Train
+from app.services.fare import calculate_fares
 
 router = APIRouter(prefix="/search", tags=["search"])
 
@@ -58,6 +59,7 @@ def search_journeys(
             select(TrainService)
             .options(
                 joinedload(TrainService.train).joinedload(Train.coaches),
+                joinedload(TrainService.route),
                 joinedload(TrainService.service_stops).joinedload(ServiceStop.station),
             )
             .where(TrainService.service_date == service_date)
@@ -93,6 +95,7 @@ def search_journeys(
             {coach.seat_class for coach in service.train.coaches},
             key=lambda item: item.value,
         )
+        fares = calculate_fares(service.route.total_distance_km, available_classes)
         matches.append(
             JourneySearchResult(
                 service_id=service.id,
@@ -117,6 +120,7 @@ def search_journeys(
                 arrival_time=arrival_time,
                 duration_minutes=duration_minutes,
                 available_classes=available_classes,
+                fares=fares,
             )
         )
     matches.sort(
