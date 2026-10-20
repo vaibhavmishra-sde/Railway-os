@@ -274,6 +274,10 @@ class JourneySearchResult(BaseModel):
         default_factory=list,
         description="Distinct coach classes available on the train",
     )
+    fares: dict[SeatClass, int] = Field(
+        default_factory=dict,
+        description="Deterministic fare in INR for each available class",
+    )
 
 
 class JourneySearchResponse(BaseModel):
