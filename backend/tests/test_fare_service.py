@@ -11,3 +11,7 @@ def test_fares_are_deterministic_and_class_specific():
 
 def test_short_routes_use_minimum_base_fare():
     assert calculate_fares(10, [SeatClass.GENERAL]) == {SeatClass.GENERAL: 50}
+
+
+def test_empty_class_selection_returns_empty_fares():
+    assert calculate_fares(100, []) == {}
