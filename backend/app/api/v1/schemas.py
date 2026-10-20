@@ -290,3 +290,5 @@ class JourneySearchResponse(BaseModel):
     total: int = Field(ge=0)
     offset: int = Field(ge=0)
     limit: int = Field(ge=1, le=100)
+    sort: Literal["departure", "duration", "fare"] = "departure"
+    descending: bool = False

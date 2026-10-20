@@ -1,6 +1,7 @@
 """Direct journey search over dated train-service timetables."""
 
 from datetime import date, datetime, time
+from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import select
@@ -28,7 +29,7 @@ def search_journeys(
     seat_class: SeatClass | None = Query(None),  # noqa: B008
     offset: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=100),
-    sort: str = Query("departure", pattern="^(departure|duration|fare)$"),
+    sort: Literal["departure", "duration", "fare"] = Query("departure"),
     descending: bool = Query(False),
     db: Session = Depends(get_db),  # noqa: B008
 ) -> JourneySearchResponse:
@@ -134,6 +135,8 @@ def search_journeys(
         total=len(matches),
         offset=offset,
         limit=limit,
+        sort=sort,
+        descending=descending,
     )
 
 
