@@ -84,6 +84,8 @@ def test_search_returns_ordered_direct_match(authenticated_client):
     assert body["items"][0]["duration_minutes"] == 480
     assert body["items"][0]["available_classes"] == ["FIRST_AC", "SLEEPER"]
     assert body["items"][0]["fares"] == {"FIRST_AC": 378, "SLEEPER": 122}
+    assert body["sort"] == "departure"
+    assert body["descending"] is False
 
 
 def test_search_rejects_same_and_unknown_stations(client):
@@ -109,6 +111,16 @@ def test_search_supports_pagination_and_empty_result(authenticated_client):
     assert response.status_code == 200
     assert response.json()["total"] == 0
     assert response.json()["items"] == []
+    assert response.json()["sort"] == "duration"
+
+
+def test_search_supports_descending_sort_flag(authenticated_client):
+    _create_network(authenticated_client)
+    response = authenticated_client.get(
+        "/api/v1/search/journeys?origin=NDLS&destination=BCT&service_date=2026-10-19&descending=true"
+    )
+    assert response.status_code == 200
+    assert response.json()["descending"] is True
 
 
 def test_search_rejects_invalid_pagination_and_missing_query(client):
