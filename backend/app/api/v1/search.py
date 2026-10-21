@@ -128,7 +128,7 @@ def search_journeys(
         )
     # Sort tie-breakers independently so descending only changes the requested
     # primary ordering, not the deterministic train/service order.
-    matches.sort(key=lambda item: (item.train_number, item.service_id))
+    matches.sort(key=_tie_breaker_sort_key)
     matches.sort(key=lambda item: _primary_sort_key(item, sort), reverse=descending)
     return JourneySearchResponse(
         items=matches[offset : offset + limit],
@@ -165,3 +165,8 @@ def _primary_sort_key(result: JourneySearchResult, sort: str) -> time | int:
     else:
         primary = result.departure_time or result.arrival_time or time.max
     return primary
+
+
+def _tie_breaker_sort_key(result: JourneySearchResult) -> tuple[str, int]:
+    """Keep pagination stable when primary sort values are equal."""
+    return result.train_number, result.service_id
