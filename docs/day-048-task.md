@@ -17,4 +17,11 @@ for the affected service date and stations. The current implementation remains
 database-backed and does not require Redis to run locally.
 
 The response echoes `sort` and `descending` so clients can preserve the exact
-ordering they requested while navigating pages.
+ordering they requested while navigating pages. Descending mode reverses only
+the selected primary field; train number and service id remain ascending
+tie-breakers, which keeps adjacent pages stable.
+
+The cache-key helper is canonical: station codes are trimmed and uppercased,
+and every filter and pagination value is included. It is intentionally kept
+separate from the database-backed endpoint until a Redis read-through layer is
+introduced.
