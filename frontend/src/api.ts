@@ -27,8 +27,19 @@ export type JourneySearchParams = {
   sort?: JourneySort;
   descending?: boolean;
 };
+export type JourneySearchItem = {
+  service_id: number;
+  train_number: string;
+  train_name: string;
+  service_date: string;
+  departure_time: string | null;
+  arrival_time: string | null;
+  duration_minutes: number | null;
+  available_classes: string[];
+  fares: Record<string, number>;
+};
 export type JourneySearchResponse = {
-  items: Array<Record<string, unknown>>;
+  items: JourneySearchItem[];
   origin: string;
   destination: string;
   service_date: string;
