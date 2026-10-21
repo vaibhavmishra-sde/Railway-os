@@ -2,7 +2,8 @@
 
 from datetime import time
 
-from app.api.v1.search import _duration_minutes
+from app.api.v1.search import _duration_minutes, _primary_sort_key
+from app.api.v1.schemas import JourneySearchResult
 
 
 def test_duration_calculation_crosses_midnight():
@@ -10,6 +11,16 @@ def test_duration_calculation_crosses_midnight():
     assert _duration_minutes(time(8, 0), time(8, 0)) == 0
     assert _duration_minutes(None, time(1, 15)) is None
     assert _duration_minutes(time(8, 0), None) is None
+
+
+def test_primary_sort_key_does_not_include_tie_breakers():
+    result = JourneySearchResult.model_construct(
+        departure_time=time(8, 0), arrival_time=time(12, 0), duration_minutes=240,
+        fares={"SLEEPER": 100}, train_number="12301", service_id=2,
+    )
+    assert _primary_sort_key(result, "departure") == time(8, 0)
+    assert _primary_sort_key(result, "duration") == 240
+    assert _primary_sort_key(result, "fare") == 100
 
 
 def _create_network(client):
