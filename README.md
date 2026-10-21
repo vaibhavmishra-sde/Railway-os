@@ -327,6 +327,7 @@ database credentials out of commits.
 - [Identity implementation](docs/day-030-implementation.md)
 - [Dated service search](docs/day-040-task.md)
 - [Search pagination, sorting, and cache-key contract](docs/day-048-task.md)
+- [Frontend journey search API](docs/frontend-search-api.md)
 - [Service search resilience](docs/day-041-task.md)
 - [Frontend accessibility and auth review](docs/day-042-review.md)
 
