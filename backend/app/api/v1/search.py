@@ -126,7 +126,10 @@ def search_journeys(
                 fares=fares,
             )
         )
-    matches.sort(key=lambda item: _sort_key(item, sort), reverse=descending)
+    # Sort tie-breakers independently so descending only changes the requested
+    # primary ordering, not the deterministic train/service order.
+    matches.sort(key=lambda item: (item.train_number, item.service_id))
+    matches.sort(key=lambda item: _primary_sort_key(item, sort), reverse=descending)
     return JourneySearchResponse(
         items=matches[offset : offset + limit],
         origin=normalized_origin,
@@ -151,8 +154,8 @@ def _duration_minutes(departure: time | None, arrival: time | None) -> int | Non
     return int((end - start).total_seconds() // 60)
 
 
-def _sort_key(result: JourneySearchResult, sort: str) -> tuple:
-    """Build a total-order key so pagination remains deterministic."""
+def _primary_sort_key(result: JourneySearchResult, sort: str) -> time | int:
+    """Return the requested field, leaving tie-breaking to the caller."""
     if sort == "duration":
         primary = (
             result.duration_minutes if result.duration_minutes is not None else 10**9
@@ -161,4 +164,4 @@ def _sort_key(result: JourneySearchResult, sort: str) -> tuple:
         primary = min(result.fares.values(), default=10**9)
     else:
         primary = result.departure_time or result.arrival_time or time.max
-    return primary, result.train_number, result.service_id
+    return primary
