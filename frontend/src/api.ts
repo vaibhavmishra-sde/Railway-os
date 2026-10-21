@@ -16,6 +16,28 @@ export type Service = {
   status: "scheduled" | "boarding" | "departed" | "delayed" | "cancelled" | string;
 };
 export type LoginResponse = { access_token: string; expires_at: string };
+export type JourneySort = "departure" | "duration" | "fare";
+export type JourneySearchParams = {
+  origin: string;
+  destination: string;
+  serviceDate: string;
+  seatClass?: string;
+  offset?: number;
+  limit?: number;
+  sort?: JourneySort;
+  descending?: boolean;
+};
+export type JourneySearchResponse = {
+  items: Array<Record<string, unknown>>;
+  origin: string;
+  destination: string;
+  service_date: string;
+  total: number;
+  offset: number;
+  limit: number;
+  sort: JourneySort;
+  descending: boolean;
+};
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const token = getAccessToken();
