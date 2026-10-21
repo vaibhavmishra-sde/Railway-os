@@ -17,7 +17,9 @@ def journey_cache_key(
 ) -> str:
     """Return the canonical key for one fully qualified search request."""
     requested_class = seat_class.value if seat_class else "all"
+    normalized_origin = origin.strip().upper()
+    normalized_destination = destination.strip().upper()
     return (
-        f"journeys:{service_date.isoformat()}:{origin.upper()}:{destination.upper()}"
+        f"journeys:{service_date.isoformat()}:{normalized_origin}:{normalized_destination}"
         f":{requested_class}:{sort}:{str(descending).lower()}:{offset}:{limit}"
     )

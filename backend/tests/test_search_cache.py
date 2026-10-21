@@ -27,3 +27,11 @@ def test_journey_cache_key_normalizes_station_case():
         date(2026, 10, 21), "ndls", "bct", None, "departure", False, 0, 50
     )
     assert upper == lower
+
+
+def test_journey_cache_key_normalizes_station_whitespace():
+    assert journey_cache_key(
+        date(2026, 10, 21), " NDLS ", " BCT ", None, "departure", False, 0, 50
+    ) == journey_cache_key(
+        date(2026, 10, 21), "NDLS", "BCT", None, "departure", False, 0, 50
+    )
