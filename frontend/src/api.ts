@@ -77,7 +77,7 @@ export function journeySearchPath(params: JourneySearchParams): string {
 }
 
 export const api = {
-  stations: (search: string) => request<Station[]>(`/stations?limit=8${search ? `&search=${encodeURIComponent(search)}` : ""}`),
+  stations: (search: string, signal?: AbortSignal) => request<Station[]>(`/stations?limit=8${search ? `&search=${encodeURIComponent(search)}` : ""}`, { signal }),
   services: (date: string, signal?: AbortSignal) => request<Service[]>(`/services?service_date=${encodeURIComponent(date)}`, { signal }),
   journeys: (params: JourneySearchParams, signal?: AbortSignal) => request<JourneySearchResponse>(journeySearchPath(params), { signal }),
   login: (email: string, password: string) => request<LoginResponse>("/auth/login", { method: "POST", body: JSON.stringify({ email, password }) }),
