@@ -50,6 +50,8 @@ export type JourneySearchResponse = {
   descending: boolean;
 };
 
+export const normalizeStationCode = (value: string) => value.trim().toUpperCase();
+
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const token = getAccessToken();
   const response = await fetch(`${API_BASE}${path}`, {
@@ -62,8 +64,8 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
 
 export function journeySearchPath(params: JourneySearchParams): string {
   const query = new URLSearchParams({
-    origin: params.origin.trim().toUpperCase(),
-    destination: params.destination.trim().toUpperCase(),
+    origin: normalizeStationCode(params.origin),
+    destination: normalizeStationCode(params.destination),
     service_date: params.serviceDate,
     offset: String(params.offset ?? 0),
     limit: String(params.limit ?? 50),

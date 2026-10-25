@@ -1,6 +1,7 @@
-import { journeySearchPath } from "./api";
+import { journeySearchPath, normalizeStationCode } from "./api";
 
 export function runJourneySearchPathAssertions() {
+  if (normalizeStationCode("  ndls ") !== "NDLS") throw new Error("Station normalization is invalid");
   const path = journeySearchPath({
     origin: " ndls ",
     destination: "bct",
