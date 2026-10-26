@@ -67,7 +67,7 @@ function App() {
     try {
       const origin = suggestions.find((station) => station.name === from)?.code ?? from;
       if (!origin.trim() || !to.trim()) throw new Error("Enter departure and arrival stations.");
-      setJourneys(await api.journeys({ origin, destination: to, serviceDate: date }));
+      setJourneys(await api.journeys({ origin, destination: to, serviceDate: date, seatClass: seatClass === "ANY" ? undefined : seatClass }));
     } catch (error) { setJourneyError(error instanceof Error ? error.message : "Unable to search journeys"); }
     finally { setJourneyLoading(false); }
   };
