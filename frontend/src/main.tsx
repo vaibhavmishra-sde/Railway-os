@@ -2,7 +2,7 @@ import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./styles.css";
 import "./ui-overrides.css";
-import { api, type Service, type Station } from "./api";
+import { api, SEAT_CLASSES, type Service, type SeatClass, type Station } from "./api";
 import { useQuery } from "./useQuery";
 import { journeyCountLabel, journeyTimeLabel, localDateInputValue } from "./serviceBoard";
 import { clearAccessToken, getAccessToken, saveAccessToken } from "./auth";
@@ -14,6 +14,7 @@ function App() {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [date, setDate] = useState(today);
+  const [seatClass, setSeatClass] = useState<SeatClass>("ANY");
   const [suggestions, setSuggestions] = useState<Station[]>([]);
   const [destinationSuggestions, setDestinationSuggestions] = useState<Station[]>([]);
   const [bookingOpen, setBookingOpen] = useState(false);
