@@ -6,6 +6,7 @@ import { api, SEAT_CLASSES, type Service, type SeatClass, type Station } from ".
 import { useQuery } from "./useQuery";
 import { journeyCountLabel, journeyTimeLabel, localDateInputValue } from "./serviceBoard";
 import { clearAccessToken, getAccessToken, saveAccessToken } from "./auth";
+import { addRecentSearch, readRecentSearches, writeRecentSearches, type RecentSearch } from "./recentSearches";
 
 const today = localDateInputValue();
 const statusLabel = (status: string) => status.replace(/_/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
@@ -27,6 +28,7 @@ function App() {
   const [journeys, setJourneys] = useState<Awaited<ReturnType<typeof api.journeys>> | null>(null);
   const [journeyError, setJourneyError] = useState<string | null>(null);
   const [journeyLoading, setJourneyLoading] = useState(false);
+  const [recentSearches, setRecentSearches] = useState<RecentSearch[]>(readRecentSearches);
 
   useEffect(() => {
     if (getAccessToken()) void api.me().then((user) => setUserEmail(user.email)).catch(() => clearAccessToken());
@@ -67,6 +69,9 @@ function App() {
     try {
       const origin = suggestions.find((station) => station.name === from)?.code ?? from;
       if (!origin.trim() || !to.trim()) throw new Error("Enter departure and arrival stations.");
+      const recent = addRecentSearch({ origin: origin.trim(), destination: to.trim(), serviceDate: date, seatClass }, recentSearches);
+      setRecentSearches(recent);
+      writeRecentSearches(recent);
       setJourneys(await api.journeys({ origin, destination: to, serviceDate: date, seatClass: seatClass === "ANY" ? undefined : seatClass }));
     } catch (error) { setJourneyError(error instanceof Error ? error.message : "Unable to search journeys"); }
     finally { setJourneyLoading(false); }
