@@ -17,11 +17,13 @@ export type Service = {
 };
 export type LoginResponse = { access_token: string; expires_at: string };
 export type JourneySort = "departure" | "duration" | "fare";
+export const SEAT_CLASSES = ["ANY", "FIRST", "AC", "SLEEPER", "SECOND"] as const;
+export type SeatClass = (typeof SEAT_CLASSES)[number];
 export type JourneySearchParams = {
   origin: string;
   destination: string;
   serviceDate: string;
-  seatClass?: string;
+  seatClass?: SeatClass;
   offset?: number;
   limit?: number;
   sort?: JourneySort;
