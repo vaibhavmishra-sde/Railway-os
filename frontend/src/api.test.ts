@@ -15,4 +15,5 @@ export function runJourneySearchPathAssertions() {
   if (!path.includes("origin=NDLS") || !path.includes("seat_class=SLEEPER") || !path.includes("sort=fare") || !path.includes("descending=true")) {
     throw new Error("Journey search query mapping is invalid");
   }
+  if (!path.includes("service_date=2026-10-22")) throw new Error("Travel date mapping is invalid");
 }
