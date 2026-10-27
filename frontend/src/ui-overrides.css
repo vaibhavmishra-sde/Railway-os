@@ -10,7 +10,7 @@
 .journey-timing span { color: #667085; font-size: .85rem; }
 .journey-meta { justify-content: flex-start; flex-wrap: wrap; margin: 0; }
 .journey-meta b { color: #172033; margin-right: 4px; }
-.modal { width: min(390px, calc(100% - 32px)); padding: 30px; border: 0; border-radius: 14px; box-shadow: 0 20px 60px #17203340; } .modal::backdrop { background: #17203366; } .modal form { display: grid; gap: 12px; margin-top: 18px; } .close { float: right; border: 0; background: transparent; font-size: 1.5rem; }
+.modal { width: min(390px, calc(100% - 32px)); padding: 30px; border: 0; border-radius: 14px; box-shadow: 0 20px 60px #17203340; } .modal::backdrop { background: #17203366; } .modal form { display: grid; gap: 12px; margin-top: 18px; } .close { float: right; border: 0; background: transparent; font-size: 1.5rem; } .journey-preview { margin: 16px 0 24px; font-weight: 700; color: #172033; }
 .book-link:focus-visible, .primary:focus-visible, .profile:focus-visible, input:focus-visible {
   outline: 3px solid #ef6c4d;
   outline-offset: 3px;
