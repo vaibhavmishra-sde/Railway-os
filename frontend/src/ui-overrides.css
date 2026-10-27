@@ -1,6 +1,15 @@
 .suggestions { display: block; position: absolute; z-index: 2; width: 100%; margin-top: 4px; padding: 4px; border: 1px solid #dfe3e8; border-radius: 7px; background: white; box-shadow: 0 8px 20px #17203318; }
 .suggestions button { display: block; width: 100%; padding: 9px; border: 0; background: white; text-align: left; }
 .error { color: #b23b2f; } .notice, .muted { color: #667085; } .book-link { border: 0; background: transparent; color: #ef6c4d; font-weight: 700; }
+.journey-results { margin-top: 24px; }
+.journey-card { padding: 18px 0; border-top: 1px solid #dfe3e8; }
+.journey-heading, .journey-timing, .journey-meta { display: flex; justify-content: space-between; gap: 16px; align-items: center; }
+.journey-heading strong, .journey-timing strong { display: block; font-size: 1.05rem; }
+.journey-heading small, .journey-meta { color: #667085; font-size: .82rem; }
+.journey-timing { margin: 16px 0 10px; }
+.journey-timing span { color: #667085; font-size: .85rem; }
+.journey-meta { justify-content: flex-start; flex-wrap: wrap; margin: 0; }
+.journey-meta b { color: #172033; margin-right: 4px; }
 .modal { width: min(390px, calc(100% - 32px)); padding: 30px; border: 0; border-radius: 14px; box-shadow: 0 20px 60px #17203340; } .modal::backdrop { background: #17203366; } .modal form { display: grid; gap: 12px; margin-top: 18px; } .close { float: right; border: 0; background: transparent; font-size: 1.5rem; }
 .book-link:focus-visible, .primary:focus-visible, .profile:focus-visible, input:focus-visible {
   outline: 3px solid #ef6c4d;
