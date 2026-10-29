@@ -9,6 +9,14 @@
 - Blocker: `docs/startup-roadmap-51-112.md` is not present; Day 51 follows the existing roadmap.
 - Decision: Recent searches are stored locally only; no server-side history is collected.
 
+## Day 54 — Search resilience states
+
+- Date: 2026-10-29
+- Status: Complete
+- Done: Kept search loading visible, preserved journey and service API errors, added offline-specific search messaging, and made zero-result searches explicit.
+- Verification: `npm.cmd run build` and `npm.cmd run lint` passed.
+- Blocker: `AGENTS.md` and `docs/startup-roadmap-51-112.md` are not present in this checkout; followed `docs/first-four-months-daily.md` and the existing Day 53 task trail.
+
 ## Day 53 — Selected journey preview
 
 - Date: 2026-10-28
