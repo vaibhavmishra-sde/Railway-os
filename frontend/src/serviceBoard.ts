@@ -4,7 +4,7 @@ export const serviceStatusTone = (status: string) => status.toLowerCase().includ
 
 export const serviceRouteLabel = (routeId: string) => routeId ? `Route ${routeId}` : "Route unavailable";
 export const journeyTimeLabel = (departure: string | null, arrival: string | null) => `${departure ?? "Time unavailable"} → ${arrival ?? "Time unavailable"}`;
-export const journeyCountLabel = (count: number) => `${count} journey${count === 1 ? "" : "s"}`;
+export const journeyCountLabel = (count: number) => count === 0 ? "No journeys" : `${count} journey${count === 1 ? "" : "s"}`;
 
 export const serviceDateLabel = (date: string) => date || "Date unavailable";
 
