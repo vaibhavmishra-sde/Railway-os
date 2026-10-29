@@ -76,7 +76,10 @@ function App() {
       setRecentSearches(recent);
       writeRecentSearches(recent);
       setJourneys(await api.journeys({ origin, destination: to, serviceDate: date, seatClass: seatClass === "ANY" ? undefined : seatClass }));
-    } catch (error) { setJourneyError(error instanceof Error ? error.message : "Unable to search journeys"); }
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") return;
+      setJourneyError(navigator.onLine ? (error instanceof Error ? error.message : "Unable to search journeys") : "You appear to be offline. Check your connection and try again.");
+    }
     finally { setJourneyLoading(false); }
   };
 
