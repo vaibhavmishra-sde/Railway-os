@@ -8,9 +8,10 @@ export const serviceRouteLabel = (routeId: string) => routeId ? `Route ${routeId
 
 export const isServiceDate = (value: string) => /^\d{4}-\d{2}-\d{2}$/.test(value);
 export const serviceStatusTone = (status: string) => status.toLowerCase().includes("delay") || status.toLowerCase().includes("cancel") ? "warn" : "good";
+export const journeyCountLabel = (count: number) => count === 0 ? "No journeys" : `${count} journey${count === 1 ? "" : "s"}`;
 
 export function runServiceBoardAssertions() {
-  if (serviceStatusClass("On time") !== "good" || serviceStatusClass("Delayed 12m") !== "warn" || serviceStatusLabel("") !== "Status unavailable" || serviceDateLabel("") !== "Date unavailable" || serviceRouteLabel("") !== "Route unavailable" || !isServiceDate("2026-10-17") || isServiceDate("17-10-2026") || serviceStatusTone("Delayed") !== "warn") {
+  if (serviceStatusClass("On time") !== "good" || serviceStatusClass("Delayed 12m") !== "warn" || serviceStatusLabel("") !== "Status unavailable" || serviceDateLabel("") !== "Date unavailable" || serviceRouteLabel("") !== "Route unavailable" || !isServiceDate("2026-10-17") || isServiceDate("17-10-2026") || serviceStatusTone("Delayed") !== "warn" || journeyCountLabel(0) !== "No journeys") {
     throw new Error("Service status mapping is invalid");
   }
 }
