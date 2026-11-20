@@ -3,7 +3,6 @@
 from app.db.session import SessionLocal
 from app.seed.network import seed_full_network
 
-
 def main() -> None:
     with SessionLocal() as session:
         counts = seed_full_network(session)
