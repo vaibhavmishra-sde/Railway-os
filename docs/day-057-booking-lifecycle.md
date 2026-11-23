@@ -32,3 +32,9 @@ stateDiagram-v2
 
 Unknown transitions must be rejected with a validation error and must not
 modify ticket or inventory rows.
+
+## Implementation
+
+The transition guard is implemented in `backend/app/services/booking.py` and
+covered by `backend/tests/test_booking_lifecycle.py`. Persistence models and
+migrations remain the next day's work.
