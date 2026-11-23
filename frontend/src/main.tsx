@@ -9,6 +9,7 @@ import { clearAccessToken, getAccessToken, saveAccessToken } from "./auth";
 import { addRecentSearch, readRecentSearches, writeRecentSearches, type RecentSearch } from "./recentSearches";
 import { classLabel, durationLabel, fareLabel } from "./journeyResults";
 import { journeyRouteLabel, journeySelectionLabel } from "./journeySelection";
+import { searchStatusMessage } from "./searchUi";
 
 const today = localDateInputValue();
 const statusLabel = (status: string) => status.replace(/_/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
@@ -78,7 +79,7 @@ function App() {
       setJourneys(await api.journeys({ origin, destination: to, serviceDate: date, seatClass: seatClass === "ANY" ? undefined : seatClass }));
     } catch (error) {
       if (error instanceof DOMException && error.name === "AbortError") return;
-      setJourneyError(navigator.onLine ? (error instanceof Error ? error.message : "Unable to search journeys") : "You appear to be offline. Check your connection and try again.");
+      setJourneyError(searchStatusMessage({ loading: false, error: error instanceof Error ? error.message : "Unable to search journeys", resultCount: null, online: navigator.onLine }));
     }
     finally { setJourneyLoading(false); }
   };
