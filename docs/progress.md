@@ -33,6 +33,14 @@
 - Verification: `npm.cmd run build` and `npm.cmd run lint` passed.
 - Blocker: `AGENTS.md` and `docs/startup-roadmap-51-112.md` are absent; registration is not exposed by the current backend router, so the runbook records it as a follow-up instead of claiming a complete registration flow.
 
+## Day 57 — Booking ERD and lifecycle
+
+- Date: 2026-11-23
+- Status: Complete
+- Done: Designed the booking aggregate ERD, documented booking lifecycle states and allowed transitions, captured booking invariants for the upcoming models, and linked booking relationships into the core ERD.
+- Verification: Documentation review completed; frontend `npm.cmd run build` and `npm.cmd run lint` passed.
+- Blocker: `AGENTS.md` and `docs/startup-roadmap-51-112.md` are not present in this checkout; followed `docs/first-four-months-daily.md`.
+
 ## Day 53 — Selected journey preview
 
 - Date: 2026-10-28
