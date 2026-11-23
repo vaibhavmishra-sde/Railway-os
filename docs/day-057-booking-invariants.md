@@ -18,3 +18,7 @@ These constraints guide Day 58 model and migration work.
 - Cancellation and expiry are idempotent: repeating either command cannot
   release inventory or create a refund twice.
 - Payment and refund providers are simulated; no real payment claim is made.
+
+The lifecycle transition portion of these invariants is enforced by
+`backend/app/services/booking.py`; persistence-level constraints are added in
+Day 58 with the database models and migration.
