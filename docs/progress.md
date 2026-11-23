@@ -41,6 +41,15 @@
 - Verification: Documentation review completed; frontend `npm.cmd run build` and `npm.cmd run lint` passed.
 - Blocker: `AGENTS.md` and `docs/startup-roadmap-51-112.md` are not present in this checkout; followed `docs/first-four-months-daily.md`.
 
+## Day 57 — Booking ERD and lifecycle implementation
+
+- Date: 2026-11-23
+- Status: Complete
+- Done: Added the booking lifecycle state machine and transition guard in backend code, with tests for confirmation, payment retry, cancellation/refund, and terminal states; retained the ERD, lifecycle, and invariant design documents.
+- Verification: `python -m pytest backend/tests/test_booking_lifecycle.py -q` and frontend `npm.cmd run build`/`npm.cmd run lint` passed.
+- Follow-up: Day 58 adds the persistent Booking, Traveller, Ticket, Fare, and PaymentAttempt models and migrations.
+- Blocker: `AGENTS.md` and `docs/startup-roadmap-51-112.md` are not present in this checkout; followed `docs/first-four-months-daily.md`.
+
 ## Day 53 — Selected journey preview
 
 - Date: 2026-10-28
