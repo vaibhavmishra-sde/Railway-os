@@ -1,5 +1,6 @@
 .suggestions { display: block; position: absolute; z-index: 2; width: 100%; margin-top: 4px; padding: 4px; border: 1px solid #dfe3e8; border-radius: 7px; background: white; box-shadow: 0 8px 20px #17203318; }
 .suggestions button { display: block; width: 100%; padding: 9px; border: 0; background: white; text-align: left; }
+.suggestions button, .book-link, .profile, .primary { min-height: 44px; }
 .error { color: #b23b2f; } .notice, .muted { color: #667085; } .book-link { border: 0; background: transparent; color: #ef6c4d; font-weight: 700; }
 .journey-results { margin-top: 24px; }
 .journey-card { padding: 18px 0; border-top: 1px solid #dfe3e8; }
