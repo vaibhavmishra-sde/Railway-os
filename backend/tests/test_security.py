@@ -10,7 +10,6 @@ from app.core.security import (
 )
 
 
-
 def test_password_hash_is_not_plaintext() -> None:
     password_hash = hash_password("correct horse battery staple")
 

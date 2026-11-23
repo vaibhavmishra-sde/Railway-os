@@ -48,5 +48,7 @@ def allowed_booking_transitions(status: BookingStatus) -> frozenset[BookingStatu
 def transition_booking(status: BookingStatus, target: BookingStatus) -> BookingStatus:
     """Validate and return a booking's next state."""
     if target not in allowed_booking_transitions(status):
-        raise InvalidBookingTransition(f"Cannot transition booking from {status} to {target}")
+        raise InvalidBookingTransition(
+            f"Cannot transition booking from {status} to {target}"
+        )
     return target
