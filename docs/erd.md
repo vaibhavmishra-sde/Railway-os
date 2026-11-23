@@ -86,6 +86,14 @@ erDiagram
     ROUTE ||--o{ TRAIN_SERVICE : "follows"
     TRAIN_SERVICE ||--o{ SERVICE_STOP : "calls at"
     SERVICE_STOP }o--|| STATION : "at"
+
+    USER ||--o{ BOOKING : places
+    TRAIN_SERVICE ||--o{ BOOKING : receives
+    BOOKING ||--|{ TRAVELLER : includes
+    BOOKING ||--o{ TICKET : issues
+    BOOKING ||--o{ PAYMENT_ATTEMPT : records
+    BOOKING ||--o{ BOOKING_EVENT : records
+    TICKET }o--|| SEAT : allocates
 ```
 
 ## Notes
