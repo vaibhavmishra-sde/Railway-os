@@ -25,6 +25,14 @@
 - Verification: `npm.cmd run build` and `npm.cmd run lint` passed.
 - Blocker: `AGENTS.md` and `docs/startup-roadmap-51-112.md` are not present in this checkout; followed `docs/first-four-months-daily.md` and the existing Day 54 task trail.
 
+## Day 56 — Passenger discovery demo review
+
+- Date: 2026-11-23
+- Status: Complete
+- Done: Added a typed passenger demo flow checklist, automated flow assertions, frontend startup notes, and a review runbook covering registration → login → journey search.
+- Verification: `npm.cmd run build` and `npm.cmd run lint` passed.
+- Blocker: `AGENTS.md` and `docs/startup-roadmap-51-112.md` are absent; registration is not exposed by the current backend router, so the runbook records it as a follow-up instead of claiming a complete registration flow.
+
 ## Day 53 — Selected journey preview
 
 - Date: 2026-10-28
