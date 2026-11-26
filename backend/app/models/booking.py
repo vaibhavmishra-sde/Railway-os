@@ -5,6 +5,7 @@ import uuid
 from datetime import UTC, date, datetime
 
 from sqlalchemy import (
+    CheckConstraint,
     Date,
     DateTime,
     Enum,
@@ -46,6 +47,7 @@ class Booking(Base):
     __table_args__ = (
         UniqueConstraint("pnr", name="uq_booking_pnr"),
         UniqueConstraint("user_id", "idempotency_key", name="uq_booking_idempotency"),
+        CheckConstraint("total_amount_minor >= 0", name="ck_booking_total_nonnegative"),
     )
 
     id: Mapped[str] = mapped_column(
@@ -93,6 +95,9 @@ class Traveller(Base):
 
 class Ticket(Base):
     __tablename__ = "tickets"
+    __table_args__ = (
+        CheckConstraint("fare_amount_minor >= 0", name="ck_ticket_fare_nonnegative"),
+    )
 
     id: Mapped[str] = mapped_column(
         String(36), primary_key=True, default=lambda: str(uuid.uuid4())
@@ -120,6 +125,7 @@ class Fare(Base):
     __tablename__ = "fares"
     __table_args__ = (
         UniqueConstraint("booking_id", "seat_class", name="uq_fare_booking_class"),
+        CheckConstraint("amount_minor >= 0", name="ck_fare_amount_nonnegative"),
     )
 
     id: Mapped[str] = mapped_column(
@@ -135,6 +141,9 @@ class Fare(Base):
 
 class PaymentAttempt(Base):
     __tablename__ = "payment_attempts"
+    __table_args__ = (
+        CheckConstraint("amount_minor >= 0", name="ck_payment_amount_nonnegative"),
+    )
 
     id: Mapped[str] = mapped_column(
         String(36), primary_key=True, default=lambda: str(uuid.uuid4())
