@@ -34,3 +34,11 @@ def test_booking_has_purchase_record_constraints():
     assert "uq_fare_booking_class" in {
         constraint.name for constraint in Fare.__table__.constraints
     }
+
+
+def test_booking_pnr_is_database_unique_and_ten_characters():
+    pnr_column = Booking.__table__.c.pnr
+    assert pnr_column.type.length == 10
+    assert "uq_booking_pnr" in {
+        constraint.name for constraint in Booking.__table__.constraints
+    }
