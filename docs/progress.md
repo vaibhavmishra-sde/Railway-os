@@ -41,6 +41,15 @@
 - Verification: Documentation review completed; frontend `npm.cmd run build` and `npm.cmd run lint` passed.
 - Blocker: `AGENTS.md` and `docs/startup-roadmap-51-112.md` are not present in this checkout; followed `docs/first-four-months-daily.md`.
 
+## Day 60 — Collision-safe PNR generation
+
+- Date: 2026-11-26
+- Status: Complete
+- Done: Implemented the ten-character `RO########` PNR format, bounded collision-aware generator, explicit retry exhaustion error, and tests confirming the existing database uniqueness constraint.
+- Verification: `116` backend tests passed; Ruff check/format passed; Alembic reports `20261126_02` as head; frontend build and lint passed.
+- Follow-up: Day 61 defines simulated payment states and idempotency-key policy.
+- Blocker: `AGENTS.md` and `docs/startup-roadmap-51-112.md` are not present in this checkout; followed `docs/first-four-months-daily.md`.
+
 ## Day 59 — Service-date inventory constraints
 
 - Date: 2026-11-26
