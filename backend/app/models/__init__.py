@@ -7,6 +7,15 @@ Import all model modules here so that:
 All models extend ``app.db.session.Base`` (SQLAlchemy ``DeclarativeBase``).
 """
 
+from app.models.booking import (  # noqa: F401
+    Booking,
+    BookingStatus,
+    Fare,
+    PaymentAttempt,
+    PaymentAttemptStatus,
+    Ticket,
+    Traveller,
+)
 from app.models.identity import AuditEvent, Role, User, UserRole  # noqa: F401
 from app.models.route import Route, RouteStop  # noqa: F401
 from app.models.seat import BerthType, Seat  # noqa: F401
@@ -29,4 +38,11 @@ __all__ = [
     "Role",
     "UserRole",
     "AuditEvent",
+    "Booking",
+    "BookingStatus",
+    "Traveller",
+    "Ticket",
+    "Fare",
+    "PaymentAttempt",
+    "PaymentAttemptStatus",
 ]

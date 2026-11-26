@@ -1,19 +1,6 @@
 """Booking lifecycle rules shared by booking commands and persistence code."""
 
-from enum import StrEnum
-
-
-class BookingStatus(StrEnum):
-    DRAFT = "DRAFT"
-    PAYMENT_PENDING = "PAYMENT_PENDING"
-    PAYMENT_FAILED = "PAYMENT_FAILED"
-    CONFIRMED = "CONFIRMED"
-    CANCELLED = "CANCELLED"
-    REFUND_PENDING = "REFUND_PENDING"
-    REFUNDED = "REFUNDED"
-    REFUND_FAILED = "REFUND_FAILED"
-    EXPIRED = "EXPIRED"
-    COMPLETED = "COMPLETED"
+from app.models.booking import BookingStatus
 
 
 class InvalidBookingTransition(ValueError):
