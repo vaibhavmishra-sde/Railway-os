@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     APP_NAME: str = "RailwayOS"
     APP_VERSION: str = "0.1.0"
     API_PREFIX: str = "/api/v1"
+    FRONTEND_URL: str = "http://localhost:5173"
 
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
