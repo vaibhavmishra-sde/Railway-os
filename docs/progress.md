@@ -41,6 +41,15 @@
 - Verification: Documentation review completed; frontend `npm.cmd run build` and `npm.cmd run lint` passed.
 - Blocker: `AGENTS.md` and `docs/startup-roadmap-51-112.md` are not present in this checkout; followed `docs/first-four-months-daily.md`.
 
+## Day 59 — Service-date inventory constraints
+
+- Date: 2026-11-26
+- Status: Complete
+- Done: Implemented `ServiceSeatInventory` with service/seat uniqueness, inventory statuses, booking holds, expiry timestamps, and reversible migration `20261126_02`; added nonnegative booking, fare, ticket, and payment database checks.
+- Verification: `112` backend tests passed; Ruff check/format passed; Alembic reports `20261126_02` as head; frontend build and lint passed.
+- Follow-up: Day 60 adds PNR generation and database uniqueness protection.
+- Blocker: `AGENTS.md` and `docs/startup-roadmap-51-112.md` are not present in this checkout; followed `docs/first-four-months-daily.md`.
+
 ## Day 57 — Booking ERD and lifecycle implementation
 
 - Date: 2026-11-23
