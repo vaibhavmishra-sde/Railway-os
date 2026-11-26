@@ -50,6 +50,15 @@
 - Follow-up: Day 58 adds the persistent Booking, Traveller, Ticket, Fare, and PaymentAttempt models and migrations.
 - Blocker: `AGENTS.md` and `docs/startup-roadmap-51-112.md` are not present in this checkout; followed `docs/first-four-months-daily.md`.
 
+## Day 58 — Booking persistence
+
+- Date: 2026-11-26
+- Status: Complete
+- Done: Implemented SQLAlchemy Booking, Traveller, Ticket, Fare, and PaymentAttempt models, registered them in metadata, added the reversible Alembic migration `20261126_01`, and covered defaults/constraints with tests.
+- Verification: `109` backend tests passed; Ruff check/format passed; Alembic reports `20261126_01` as the head; frontend build and lint passed.
+- Follow-up: Day 59 adds service-date seat inventory and booking-status constraints.
+- Blocker: `AGENTS.md` and `docs/startup-roadmap-51-112.md` are not present in this checkout; followed `docs/first-four-months-daily.md`.
+
 ## Day 53 — Selected journey preview
 
 - Date: 2026-10-28
